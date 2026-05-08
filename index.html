@@ -1,0 +1,1722 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>USz Guide — Studencki Przewodnik po Przedmiotach</title>
+<meta name="description" content="Anonimowa platforma ocen przedmiotów i wykładowców Uniwersytetu Szczecińskiego.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0A1628;
+    --primary: #1B3A6B;
+    --primary-hover: #15315A;
+    --primary-tint: #EEF2F8;
+    --paper: #FFFFFF;
+    --paper-2: #FAFAF7;
+    --rule: #E5E7EB;
+    --rule-strong: #1B3A6B;
+    --muted: #6B7280;
+    --gold: #B8884E;
+    --gold-light: #E8D9BD;
+    --positive: #2F7D5C;
+    --negative: #B14545;
+    --max-w: 1200px;
+    --gutter: clamp(1.25rem, 4vw, 2.5rem);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: 'Manrope', system-ui, sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--ink);
+    background: var(--paper);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  img { max-width: 100%; display: block; }
+
+  /* ========= Typography ========= */
+  .display {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-variation-settings: "opsz" 144, "SOFT" 30;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+  .serif { font-family: 'Fraunces', Georgia, serif; font-variation-settings: "opsz" 24; }
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .num { font-variant-numeric: tabular-nums; }
+
+  /* ========= Layout ========= */
+  .container { max-width: var(--max-w); margin: 0 auto; padding: 0 var(--gutter); }
+  .stack-xs > * + * { margin-top: 0.5rem; }
+  .stack-s > * + * { margin-top: 1rem; }
+  .stack-m > * + * { margin-top: 1.5rem; }
+  .stack-l > * + * { margin-top: 3rem; }
+
+  /* ========= Header ========= */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: saturate(140%) blur(8px);
+    -webkit-backdrop-filter: saturate(140%) blur(8px);
+    border-bottom: 1px solid var(--rule);
+  }
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+    gap: 2rem;
+  }
+  .brand {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    color: var(--primary);
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+  .brand__mark {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    transform: translateY(-2px);
+  }
+  .nav { display: flex; gap: 2rem; align-items: center; }
+  .nav a {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    padding: 6px 0;
+    border-bottom: 1px solid transparent;
+    transition: border-color 200ms ease, color 200ms ease;
+  }
+  .nav a:hover { border-color: var(--primary); }
+  .nav a.is-active { border-color: var(--primary); color: var(--primary); }
+  .nav-cta {
+    background: var(--primary);
+    color: var(--paper);
+    padding: 10px 18px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 200ms ease, transform 200ms ease;
+  }
+  .nav-cta:hover { background: var(--primary-hover); }
+  .nav a.nav-cta.is-active { color: var(--paper); border-color: transparent; background: var(--primary-hover); }
+  .menu-toggle { display: none; }
+
+  @media (max-width: 720px) {
+    .nav { display: none; position: absolute; top: 72px; left: 0; right: 0; flex-direction: column; align-items: stretch; padding: 1rem var(--gutter); background: var(--paper); border-bottom: 1px solid var(--rule); gap: 0; }
+    .nav.is-open { display: flex; }
+    .nav a { padding: 12px 0; border-bottom: 1px solid var(--rule); }
+    .nav a:last-child { border-bottom: none; }
+    .menu-toggle { display: block; font-size: 24px; line-height: 1; padding: 8px; }
+  }
+
+  /* ========= Hero (Home) ========= */
+  .hero {
+    padding: clamp(3rem, 8vw, 6rem) 0 clamp(3rem, 8vw, 5rem);
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    align-items: end;
+  }
+  @media (min-width: 900px) {
+    .hero__grid { grid-template-columns: 1.4fr 1fr; gap: 4rem; }
+  }
+  .hero__title {
+    font-size: clamp(2.5rem, 7vw, 5rem);
+    margin: 0;
+    color: var(--ink);
+  }
+  .hero__title em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--primary);
+  }
+  .hero__sub {
+    font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+    line-height: 1.5;
+    color: var(--muted);
+    max-width: 50ch;
+    margin: 1.75rem 0 0;
+  }
+  .hero__meta {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    border-left: 1px solid var(--rule);
+  }
+  .hero__meta > div {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero__meta > div:nth-child(odd) { border-right: 1px solid var(--rule); }
+  .hero__meta-num {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 500;
+    line-height: 1;
+    color: var(--primary);
+    font-variant-numeric: tabular-nums;
+  }
+  .hero__meta-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-top: 0.4rem;
+    letter-spacing: 0.04em;
+  }
+
+  /* ========= Search bar ========= */
+  .search {
+    margin-top: 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    border: 1px solid var(--ink);
+    background: var(--paper);
+    transition: border-color 200ms ease, box-shadow 200ms ease;
+  }
+  .search:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-tint);
+  }
+  .search__icon { padding: 0 0 0 1rem; color: var(--muted); display: flex; align-items: center; }
+  .search input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 1.05rem 1rem;
+    font-family: inherit;
+    font-size: 16px;
+    background: transparent;
+    color: var(--ink);
+  }
+  .search input::placeholder { color: var(--muted); }
+  .search button {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0 1.75rem;
+    align-self: stretch;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    transition: background 200ms ease;
+  }
+  .search button:hover { background: var(--primary); }
+
+  /* ========= Section ========= */
+  .section { padding: clamp(3rem, 7vw, 5rem) 0; border-bottom: 1px solid var(--rule); }
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--ink);
+  }
+  .section-head h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    letter-spacing: -0.015em;
+    margin: 0.4rem 0 0;
+    line-height: 1.1;
+  }
+  .section-head__link {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--primary);
+    border-bottom: 1px solid var(--primary);
+    padding-bottom: 2px;
+  }
+  .section-head__link:hover { color: var(--primary-hover); }
+
+  /* ========= Course cards ========= */
+  .courses-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    border-top: 1px solid var(--rule);
+  }
+  @media (min-width: 720px) { .courses-grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1100px) { .courses-grid { grid-template-columns: repeat(3, 1fr); } }
+
+  .course-card {
+    padding: 1.5rem;
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper);
+    cursor: pointer;
+    transition: background 220ms ease;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-height: 240px;
+    position: relative;
+  }
+  .course-card:hover { background: var(--paper-2); }
+  .course-card:hover .course-card__title { color: var(--primary); }
+  .course-card__top { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+  .course-card__faculty {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .course-card__rating-block {
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .course-card__rating {
+    font-family: 'Fraunces', serif;
+    font-size: 2rem;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .course-card__rating-meta {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 0.25rem;
+    letter-spacing: 0.04em;
+  }
+  .course-card__title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.35rem;
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--ink);
+    margin: 0;
+    transition: color 220ms ease;
+    flex: 1;
+  }
+  .course-card__lecturer {
+    font-size: 13px;
+    color: var(--muted);
+    border-top: 1px solid var(--rule);
+    padding-top: 0.75rem;
+  }
+  .course-card__lecturer strong { color: var(--ink); font-weight: 500; }
+
+  /* Stars */
+  .stars { display: inline-flex; gap: 1px; align-items: center; }
+  .stars svg { width: 14px; height: 14px; }
+  .stars--lg svg { width: 22px; height: 22px; }
+  .star-filled { color: var(--gold); }
+  .star-empty { color: var(--gold-light); }
+
+  /* ========= Faculties ========= */
+  .faculties-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    border-top: 1px solid var(--rule);
+    border-left: 1px solid var(--rule);
+  }
+  @media (min-width: 600px) { .faculties-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1000px) { .faculties-grid { grid-template-columns: repeat(4, 1fr); } }
+
+  .faculty-card {
+    padding: 1.75rem 1.5rem;
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    cursor: pointer;
+    transition: background 220ms ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2rem;
+    min-height: 200px;
+  }
+  .faculty-card:hover { background: var(--primary); color: var(--paper); }
+  .faculty-card:hover .faculty-card__index,
+  .faculty-card:hover .faculty-card__count { color: rgba(255,255,255,0.7); }
+  .faculty-card:hover .faculty-card__name { color: var(--paper); }
+  .faculty-card__top { display: flex; justify-content: space-between; align-items: baseline; }
+  .faculty-card__index {
+    font-family: 'Fraunces', serif;
+    font-size: 13px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    transition: color 220ms ease;
+  }
+  .faculty-card__count {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    transition: color 220ms ease;
+  }
+  .faculty-card__name {
+    font-family: 'Fraunces', serif;
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.25;
+    color: var(--ink);
+    transition: color 220ms ease;
+  }
+
+  /* ========= Rating system explainer ========= */
+  .rating-system {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    border-top: 1px solid var(--rule);
+  }
+  @media (min-width: 700px) { .rating-system { grid-template-columns: repeat(5, 1fr); } }
+  .rs-item {
+    padding: 1.5rem;
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    text-align: left;
+  }
+  .rs-item__icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--primary-tint);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  .rs-item__name {
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem;
+    font-weight: 500;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+  }
+  .rs-item__desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ========= Course list page ========= */
+  .page-header {
+    padding: clamp(2.5rem, 6vw, 4rem) 0 clamp(2rem, 4vw, 3rem);
+    border-bottom: 1px solid var(--ink);
+  }
+  .page-header h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    margin: 0.5rem 0 1rem;
+    line-height: 1.1;
+  }
+  .page-header p { font-size: 1.05rem; color: var(--muted); margin: 0; max-width: 60ch; }
+
+  .list-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    padding: 2.5rem 0;
+  }
+  @media (min-width: 900px) { .list-layout { grid-template-columns: 240px 1fr; gap: 3rem; } }
+
+  .filters { font-size: 14px; }
+  .filters__group { margin-bottom: 2rem; }
+  .filters__heading {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--ink);
+    margin-bottom: 0.8rem;
+  }
+  .filters label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    cursor: pointer;
+    color: var(--ink);
+    font-size: 14px;
+    transition: color 180ms ease;
+  }
+  .filters label:hover { color: var(--primary); }
+  .filters input[type="checkbox"] { accent-color: var(--primary); width: 14px; height: 14px; margin-right: 10px; }
+  .filters .label-text { display: flex; align-items: center; flex: 1; }
+  .filters .label-count { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+  .filters__reset {
+    font-size: 13px;
+    color: var(--primary);
+    border-bottom: 1px solid var(--primary);
+    padding-bottom: 1px;
+    margin-top: 0.5rem;
+    display: inline-block;
+  }
+
+  .results-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--ink);
+    margin-bottom: 0;
+  }
+  .results-bar__count { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .results-bar select {
+    font-family: inherit;
+    font-size: 13px;
+    border: 1px solid var(--rule);
+    padding: 6px 10px;
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .list-courses {
+    display: grid;
+    grid-template-columns: 1fr;
+    border-bottom: 1px solid var(--rule);
+  }
+  @media (min-width: 700px) { .list-courses { grid-template-columns: 1fr 1fr; border-left: 1px solid var(--rule); } }
+
+  .list-courses .course-card { border-left: none; border-top: none; }
+
+  /* ========= Course detail ========= */
+  .detail-hero {
+    padding: clamp(2.5rem, 6vw, 4rem) 0 clamp(2rem, 4vw, 3rem);
+    border-bottom: 1px solid var(--ink);
+  }
+  .breadcrumb { font-size: 13px; color: var(--muted); margin-bottom: 1rem; }
+  .breadcrumb a { color: var(--muted); border-bottom: 1px solid transparent; }
+  .breadcrumb a:hover { color: var(--primary); border-color: var(--primary); }
+  .breadcrumb span { margin: 0 0.5rem; }
+
+  .detail-hero__faculty { font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--primary); }
+  .detail-hero h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    margin: 0.75rem 0 0.75rem;
+    line-height: 1.1;
+  }
+  .detail-hero__lecturer { font-size: 1.05rem; color: var(--ink); }
+  .detail-hero__lecturer strong { color: var(--primary); font-weight: 600; }
+
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 2.5rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  @media (min-width: 900px) {
+    .detail-grid { grid-template-columns: 1fr 1.5fr; gap: 4rem; padding: 3.5rem 0; }
+  }
+
+  .overall-rating {
+    text-align: left;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 1.5rem;
+  }
+  .overall-rating__num {
+    font-family: 'Fraunces', serif;
+    font-size: 5rem;
+    font-weight: 500;
+    line-height: 1;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.03em;
+  }
+  .overall-rating__num span { color: var(--muted); font-size: 2.5rem; }
+  .overall-rating__stars { margin-top: 0.75rem; }
+  .overall-rating__count { color: var(--muted); font-size: 14px; margin-top: 0.5rem; }
+
+  .write-review-btn {
+    background: var(--primary);
+    color: var(--paper);
+    padding: 14px 24px;
+    width: 100%;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    transition: background 200ms ease;
+    margin-top: 1rem;
+  }
+  .write-review-btn:hover { background: var(--primary-hover); }
+
+  .dim-list { display: flex; flex-direction: column; gap: 1.25rem; }
+  .dim {
+    display: grid;
+    grid-template-columns: 130px 1fr 36px;
+    align-items: center;
+    gap: 1rem;
+  }
+  .dim__label { font-size: 14px; color: var(--ink); font-weight: 500; }
+  .dim__bar-track {
+    height: 6px;
+    background: var(--rule);
+    position: relative;
+  }
+  .dim__bar-fill {
+    height: 100%;
+    background: var(--primary);
+    transition: width 600ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .dim__value {
+    text-align: right;
+    font-family: 'Fraunces', serif;
+    font-size: 1rem;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+  }
+
+  /* Reviews */
+  .reviews-section { padding: 2rem 0 4rem; }
+  .reviews-section h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.75rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--ink);
+    margin: 0 0 0;
+  }
+  .review {
+    padding: 1.75rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .review__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .review__author {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 14px;
+  }
+  .review__avatar {
+    width: 32px;
+    height: 32px;
+    background: var(--primary-tint);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .review__date { color: var(--muted); font-size: 13px; }
+  .review__rating { display: flex; align-items: center; gap: 0.6rem; }
+  .review__overall {
+    font-family: 'Fraunces', serif;
+    font-size: 1.05rem;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+  .review__semester {
+    font-size: 12px;
+    color: var(--muted);
+    padding: 3px 8px;
+    border: 1px solid var(--rule);
+  }
+  .review__text {
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--ink);
+    margin: 0.5rem 0 1rem;
+  }
+  .review__final-grade {
+    display: inline-block;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+  .review__final-grade strong {
+    color: var(--ink);
+    font-family: 'Fraunces', serif;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-left: 0.5rem;
+  }
+  .review__actions { display: flex; gap: 1.25rem; align-items: center; font-size: 13px; }
+  .vote-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--muted);
+    padding: 6px 0;
+    font-size: 13px;
+    font-weight: 500;
+    border-bottom: 1px solid transparent;
+    transition: color 200ms ease, border-color 200ms ease;
+  }
+  .vote-btn:hover { color: var(--primary); border-color: var(--primary); }
+  .vote-btn.is-active.up { color: var(--positive); }
+  .vote-btn.is-active.down { color: var(--negative); }
+
+  /* ========= Write review form ========= */
+  .form-page { padding: clamp(2.5rem, 6vw, 4rem) 0 4rem; }
+  .form-card {
+    max-width: 720px;
+    margin: 0 auto;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    padding: clamp(1.75rem, 4vw, 3rem);
+  }
+  .form-notice {
+    background: var(--primary-tint);
+    border-left: 3px solid var(--primary);
+    padding: 1rem 1.25rem;
+    font-size: 14px;
+    color: var(--primary);
+    margin-bottom: 2rem;
+    line-height: 1.5;
+  }
+  .form-group { margin-bottom: 2rem; }
+  .form-group label.field-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    margin-bottom: 0.6rem;
+  }
+  .form-group .field-help {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 0.25rem;
+  }
+  .form-group select,
+  .form-group input[type="text"],
+  .form-group textarea {
+    width: 100%;
+    padding: 0.75rem 0.9rem;
+    font-family: inherit;
+    font-size: 15px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--ink);
+    transition: border-color 200ms ease, box-shadow 200ms ease;
+  }
+  .form-group select:focus,
+  .form-group input[type="text"]:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-tint);
+  }
+  .form-group textarea { min-height: 140px; resize: vertical; line-height: 1.55; }
+
+  .star-input { display: flex; gap: 4px; }
+  .star-input button {
+    padding: 4px;
+    color: var(--gold-light);
+    transition: color 150ms ease, transform 150ms ease;
+  }
+  .star-input button.is-on,
+  .star-input button.is-hover { color: var(--gold); transform: scale(1.05); }
+  .star-input svg { width: 28px; height: 28px; }
+
+  .form-submit {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 14px 32px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    transition: background 200ms ease;
+  }
+  .form-submit:hover { background: var(--primary); }
+  .form-success {
+    text-align: center;
+    padding: 3rem 1rem;
+  }
+  .form-success__icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--primary-tint);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+  }
+  .form-success h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 2rem;
+    font-weight: 500;
+    margin: 0 0 0.75rem;
+  }
+  .form-success p { color: var(--muted); margin: 0; }
+  .form-success__actions { margin-top: 2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+  /* ========= About page ========= */
+  .about-section { padding: clamp(2.5rem, 6vw, 4rem) 0; }
+  .about-text {
+    max-width: 65ch;
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+  .about-text p + p { margin-top: 1.25rem; }
+  .about-text strong { color: var(--primary); font-weight: 600; }
+  .team-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    border-top: 1px solid var(--rule);
+    margin-top: 3rem;
+  }
+  @media (min-width: 700px) { .team-grid { grid-template-columns: repeat(3, 1fr); border-left: 1px solid var(--rule); } }
+  .team-member {
+    padding: 1.75rem 1.5rem;
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .team-member__role { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .team-member__name {
+    font-family: 'Fraunces', serif;
+    font-size: 1.35rem;
+    font-weight: 500;
+    margin: 0.5rem 0 0.5rem;
+    color: var(--ink);
+  }
+  .team-member__desc { font-size: 14px; color: var(--muted); line-height: 1.5; }
+
+  /* ========= Footer ========= */
+  .site-footer {
+    background: var(--ink);
+    color: rgba(255,255,255,0.85);
+    padding: 4rem 0 2rem;
+    margin-top: auto;
+  }
+  .site-footer__top {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    margin-bottom: 3rem;
+  }
+  @media (min-width: 700px) { .site-footer__top { grid-template-columns: 2fr 1fr 1fr; } }
+  .site-footer h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--paper);
+    margin: 0 0 1rem;
+  }
+  .site-footer p { color: rgba(255,255,255,0.6); font-size: 14px; line-height: 1.6; max-width: 36ch; margin: 0; }
+  .footer-col__title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 1rem;
+  }
+  .footer-col ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.6rem; }
+  .footer-col a { color: rgba(255,255,255,0.85); font-size: 14px; transition: color 200ms ease; }
+  .footer-col a:hover { color: var(--gold-light); }
+  .site-footer__bottom {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+  }
+
+  /* ========= Anim helpers ========= */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { animation: fadeUp 500ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .delay-1 { animation-delay: 80ms; }
+  .delay-2 { animation-delay: 160ms; }
+  .delay-3 { animation-delay: 240ms; }
+
+  /* Visually hidden */
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a href="#/" class="brand" data-link>
+      <span class="brand__mark"></span>
+      USz Guide
+    </a>
+    <button class="menu-toggle" aria-label="Menu" id="menuToggle">☰</button>
+    <nav class="nav" id="mainNav">
+      <a href="#/przedmioty" data-link>Przedmioty</a>
+      <a href="#/wydzialy" data-link>Wydziały</a>
+      <a href="#/o-projekcie" data-link>O projekcie</a>
+      <a href="#/dodaj" data-link class="nav-cta">Napisz recenzję</a>
+    </nav>
+  </div>
+</header>
+
+<main id="app"></main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__top">
+      <div>
+        <h3>USz Guide</h3>
+        <p>Studencki przewodnik po przedmiotach i wykładowcach Uniwersytetu Szczecińskiego. Lepsze decyzje. Lepsze studia.</p>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col__title">Platforma</div>
+        <ul>
+          <li><a href="#/przedmioty" data-link>Przedmioty</a></li>
+          <li><a href="#/wydzialy" data-link>Wydziały</a></li>
+          <li><a href="#/dodaj" data-link>Napisz recenzję</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col__title">Projekt</div>
+        <ul>
+          <li><a href="#/o-projekcie" data-link>O nas</a></li>
+          <li><a href="#" onclick="event.preventDefault()">Regulamin</a></li>
+          <li><a href="#" onclick="event.preventDefault()">Polityka prywatności</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-footer__bottom">
+      <div>© 2026 USz Guide — projekt studencki, Przedsiębiorczość</div>
+      <div>Diogo Wang Ye · Antek Ratowt · Adam Puc</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   DATA
+   ============================================================ */
+
+const FACULTIES = [
+  { id: 'efiz', name: 'Wydział Ekonomii, Finansów i Zarządzania', short: 'EFiZ' },
+  { id: 'wh',   name: 'Wydział Humanistyczny',                     short: 'WH'   },
+  { id: 'wkfiz',name: 'Wydział Kultury Fizycznej i Zdrowia',       short: 'WKFiZ'},
+  { id: 'wns',  name: 'Wydział Nauk Społecznych',                  short: 'WNS'  },
+  { id: 'wnsip',name: 'Wydział Nauk Ścisłych i Przyrodniczych',    short: 'WNŚiP'},
+  { id: 'wpia', name: 'Wydział Prawa i Administracji',             short: 'WPiA' },
+  { id: 'wt',   name: 'Wydział Teologiczny',                       short: 'WT'   }
+];
+
+// helper for placeholder data
+const C = (id, name, lecturer, faculty, semester, dimensions, reviewsCount) => ({
+  id, name, lecturer, faculty, semester, dimensions, reviewsCount
+});
+
+const COURSES = [
+  C('mikro',   'Mikroekonomia',           'dr hab. Anna Kowalska, prof. US',  'efiz', 'I sem.',   { difficulty: 3.8, teaching: 4.6, fairness: 4.4, useful: 4.7, overall: 4.6 }, 87),
+  C('makro',   'Makroekonomia',           'prof. dr hab. Tomasz Nowak',       'efiz', 'II sem.',  { difficulty: 4.1, teaching: 4.2, fairness: 3.9, useful: 4.4, overall: 4.2 }, 64),
+  C('rach',    'Rachunkowość finansowa',  'dr Magdalena Wiśniewska',          'efiz', 'III sem.', { difficulty: 4.5, teaching: 3.5, fairness: 3.2, useful: 4.6, overall: 3.7 }, 52),
+  C('marketing','Marketing',              'dr Krzysztof Lewandowski',         'efiz', 'IV sem.',  { difficulty: 2.8, teaching: 4.7, fairness: 4.5, useful: 4.3, overall: 4.5 }, 71),
+  C('proj',    'Zarządzanie projektami',  'mgr Paweł Zieliński',              'efiz', 'V sem.',   { difficulty: 3.0, teaching: 4.8, fairness: 4.6, useful: 4.9, overall: 4.8 }, 43),
+  C('stat',    'Statystyka',              'dr hab. Joanna Kamińska, prof. US','efiz', 'II sem.',  { difficulty: 4.6, teaching: 3.8, fairness: 3.5, useful: 4.2, overall: 3.6 }, 95),
+
+  C('filo',    'Filozofia',               'prof. dr hab. Andrzej Mazur',      'wh',   'I sem.',   { difficulty: 3.4, teaching: 4.4, fairness: 4.1, useful: 3.6, overall: 4.0 }, 38),
+  C('logika',  'Logika',                  'dr Beata Szymańska',               'wh',   'I sem.',   { difficulty: 4.2, teaching: 3.6, fairness: 3.8, useful: 3.4, overall: 3.5 }, 29),
+  C('lit',     'Teoria literatury',       'dr hab. Robert Dąbrowski, prof. US','wh',  'III sem.', { difficulty: 3.2, teaching: 4.5, fairness: 4.3, useful: 3.8, overall: 4.3 }, 24),
+  C('jezyk',   'Językoznawstwo',          'prof. dr hab. Maria Kowalczyk',    'wh',   'II sem.',  { difficulty: 3.5, teaching: 4.1, fairness: 4.0, useful: 3.9, overall: 4.0 }, 31),
+
+  C('psycho',  'Psychologia ogólna',      'dr Karolina Pawlak',               'wns',  'I sem.',   { difficulty: 3.0, teaching: 4.7, fairness: 4.5, useful: 4.2, overall: 4.5 }, 112),
+  C('socjo',   'Socjologia',              'dr hab. Marek Wojcik, prof. US',   'wns',  'I sem.',   { difficulty: 2.9, teaching: 4.3, fairness: 4.4, useful: 4.0, overall: 4.2 }, 78),
+  C('peda',    'Pedagogika',              'dr Aleksandra Król',               'wns',  'II sem.',  { difficulty: 2.7, teaching: 4.0, fairness: 4.2, useful: 3.7, overall: 3.9 }, 46),
+  C('polit',   'Nauki o polityce',        'prof. dr hab. Jan Lis',            'wns',  'III sem.', { difficulty: 3.4, teaching: 4.5, fairness: 4.2, useful: 4.1, overall: 4.3 }, 33),
+
+  C('alg',     'Algebra liniowa',         'dr hab. Piotr Adamczyk, prof. US', 'wnsip','I sem.',   { difficulty: 4.7, teaching: 4.0, fairness: 3.6, useful: 4.4, overall: 3.9 }, 67),
+  C('analiza', 'Analiza matematyczna',    'prof. dr hab. Wojciech Stępień',   'wnsip','I sem.',   { difficulty: 4.8, teaching: 3.4, fairness: 3.0, useful: 4.5, overall: 3.4 }, 89),
+  C('progr',   'Programowanie obiektowe', 'mgr inż. Dariusz Wróbel',          'wnsip','III sem.', { difficulty: 3.9, teaching: 4.6, fairness: 4.5, useful: 4.9, overall: 4.7 }, 54),
+  C('bd',      'Bazy danych',             'dr Łukasz Kaczmarek',              'wnsip','IV sem.',  { difficulty: 3.6, teaching: 4.4, fairness: 4.2, useful: 4.8, overall: 4.4 }, 42),
+  C('biol',    'Biologia molekularna',    'dr hab. Grażyna Sokołowska, prof. US','wnsip','II sem.',{ difficulty: 4.3, teaching: 4.2, fairness: 4.0, useful: 4.1, overall: 4.1 }, 28),
+
+  C('cyw',     'Prawo cywilne',           'prof. dr hab. Henryk Jankowski',   'wpia', 'III sem.', { difficulty: 4.5, teaching: 4.3, fairness: 4.0, useful: 4.7, overall: 4.3 }, 76),
+  C('karne',   'Prawo karne',             'dr hab. Ewa Mazurek, prof. US',    'wpia', 'IV sem.',  { difficulty: 4.4, teaching: 4.5, fairness: 4.2, useful: 4.6, overall: 4.4 }, 58),
+  C('admin',   'Postępowanie administracyjne','dr Marek Krawczyk',            'wpia', 'V sem.',   { difficulty: 4.0, teaching: 3.7, fairness: 3.5, useful: 4.3, overall: 3.7 }, 41),
+  C('konst',   'Prawo konstytucyjne',     'prof. dr hab. Agnieszka Walczak',  'wpia', 'I sem.',   { difficulty: 3.8, teaching: 4.6, fairness: 4.4, useful: 4.5, overall: 4.5 }, 63),
+
+  C('teo',     'Teologia fundamentalna',  'ks. dr hab. Marek Olszewski, prof. US','wt','I sem.',  { difficulty: 3.3, teaching: 4.6, fairness: 4.5, useful: 3.8, overall: 4.4 }, 18),
+  C('biblia',  'Pismo Święte – wprowadzenie','ks. prof. dr hab. Tadeusz Górski','wt', 'I sem.',   { difficulty: 3.0, teaching: 4.7, fairness: 4.6, useful: 3.9, overall: 4.5 }, 22),
+
+  C('wf',      'Anatomia człowieka',      'dr Bartosz Krupa',                 'wkfiz','I sem.',   { difficulty: 4.0, teaching: 4.3, fairness: 4.1, useful: 4.6, overall: 4.2 }, 35),
+  C('fizjo',   'Fizjologia wysiłku',      'dr hab. Justyna Borkowska, prof. US','wkfiz','II sem.',{ difficulty: 3.7, teaching: 4.5, fairness: 4.3, useful: 4.7, overall: 4.5 }, 27)
+];
+
+// pre-compute review counts per faculty
+const FACULTY_COUNTS = FACULTIES.reduce((acc, f) => {
+  acc[f.id] = COURSES.filter(c => c.faculty === f.id).length;
+  return acc;
+}, {});
+
+const TOTAL_REVIEWS = COURSES.reduce((sum, c) => sum + c.reviewsCount, 0);
+
+// Sample reviews for detail page
+const SAMPLE_REVIEWS = {
+  'mikro': [
+    { author: 'Anonim', date: '12.03.2026', semester: 'Zima 2025/26', overall: 4, finalGrade: '4,0', text: 'spoko zajęcia, Kowalska tłumaczy wykresy w miarę. ALE - na egzaminie pyta z definicji słowo w słowo. uczcie się z notatek z wykładu, nie z internetu, bo używa swoich sformułowań', up: 47, down: 3 },
+    { author: 'Anonim', date: '08.03.2026', semester: 'Zima 2025/26', overall: 5, finalGrade: '5,0', text: 'polecam, najlepszy wykład w pierwszym semestrze. dużo zadań na ćwiczeniach ale to się opłaca, kolokwium zdacie spoko jeśli chodziliście', up: 31, down: 2 },
+    { author: 'Anonim', date: '24.02.2026', semester: 'Zima 2025/26', overall: 3, finalGrade: '3,0', text: 'ja tam się męczyłam. niby tłumaczy ale tempo jest dla osób co już coś z ekonomii ogarniają. konsultacje pomagają, chodźcie jak coś nie kumacie', up: 19, down: 4 }
+  ],
+  'analiza': [
+    { author: 'Anonim', date: '15.03.2026', semester: 'Zima 2025/26', overall: 2, finalGrade: '3,0', text: 'masakra szczerze. tempo z kosmosu i jak nie miałeś dobrej matmy w liceum to powodzenia. zdałem dopiero w drugim podejściu', up: 89, down: 8 },
+    { author: 'Anonim', date: '10.03.2026', semester: 'Zima 2025/26', overall: 3, finalGrade: '3,5', text: 'trudne ale to chyba normalka na analizie. profesor zna się na rzeczy tylko nie umie tłumaczyć dla początkujących. trzeba doczytywać samemu', up: 52, down: 5 },
+    { author: 'Anonim', date: '01.03.2026', semester: 'Zima 2025/26', overall: 4, finalGrade: '4,5', text: 'jak komuś matma w liceum szła to git, da się ogarnąć. egzamin trudny ale fair, dało się przygotować z zadań z ćwiczeń', up: 24, down: 7 }
+  ],
+  'progr': [
+    { author: 'Anonim', date: '20.03.2026', semester: 'Zima 2025/26', overall: 5, finalGrade: '5,0', text: '10/10 absolutnie. Wróbel ogarnia, odpowiada na pytania na slacku nawet wieczorem. projekt zespołowy fajny - robiliśmy aplikację webową w 3 osoby', up: 89, down: 2 },
+    { author: 'Anonim', date: '14.03.2026', semester: 'Zima 2025/26', overall: 5, finalGrade: '4,5', text: 'najlepsze zajęcia w semestrze. dużo kodu, mało gadania. polecam wszystkim co chcą się faktycznie nauczyć programować a nie tylko zaliczyć', up: 56, down: 1 },
+    { author: 'Anonim', date: '03.03.2026', semester: 'Zima 2025/26', overall: 4, finalGrade: '4,0', text: 'spoko ale UWAGA z deadlinem na projekt - jak nie oddasz na czas to nie zaliczysz. ostatnie dni miałem stres jak cholera', up: 28, down: 4 }
+  ],
+  'rach': [
+    { author: 'Anonim', date: '18.03.2026', semester: 'Zima 2025/26', overall: 3, finalGrade: '3,5', text: 'no słabo. mówi szybko, slajdy chaotyczne, na pytania odpowiada półgębkiem. uczcie się z książki Sawickiej, slajdy zostawcie', up: 41, down: 7 },
+    { author: 'Anonim', date: '11.03.2026', semester: 'Zima 2025/26', overall: 4, finalGrade: '4,0', text: 'trudny ale przydatny. jak chcecie iść w finanse to musicie umieć. sama treść ok, prowadzenie - hmm średnio', up: 27, down: 5 }
+  ]
+};
+
+// Generic fallback reviews used for courses without specific samples
+const GENERIC_REVIEWS = [
+  { author: 'Anonim', date: '14.03.2026', semester: 'Zima 2025/26', overall: 4, finalGrade: '4,0', text: 'spoko, da się przeżyć. uczcie się systematycznie a nie noc przed egzaminem to dacie radę', up: 23, down: 3 },
+  { author: 'Anonim', date: '28.02.2026', semester: 'Zima 2025/26', overall: 3, finalGrade: '3,5', text: 'ujdzie. nic szczególnego ani na plus ani na minus. trzeba się nauczyć i tyle', up: 12, down: 4 }
+];
+
+/* ============================================================
+   ICONS
+   ============================================================ */
+const ICON_SEARCH = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`;
+const ICON_STAR = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`;
+const ICON_THUMB_UP = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M7 10v11h-3a1 1 0 01-1-1V11a1 1 0 011-1h3z"/><path d="M7 10l5-7c1.5 0 2.5 1 2.5 2.5V9h5a2 2 0 012 2.4l-1.5 7A2 2 0 0117 20H7"/></svg>`;
+const ICON_THUMB_DOWN = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M17 14V3h3a1 1 0 011 1v9a1 1 0 01-1 1h-3z"/><path d="M17 14l-5 7c-1.5 0-2.5-1-2.5-2.5V15h-5a2 2 0 01-2-2.4l1.5-7A2 2 0 017 4h10"/></svg>`;
+const ICON_CHECK = `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+function starsHtml(rating, size='') {
+  let html = `<span class="stars ${size}" aria-label="${rating.toFixed(1)} z 5">`;
+  for (let i = 1; i <= 5; i++) {
+    const cls = i <= Math.round(rating) ? 'star-filled' : 'star-empty';
+    html += `<span class="${cls}">${ICON_STAR}</span>`;
+  }
+  html += '</span>';
+  return html;
+}
+
+function getFaculty(id) { return FACULTIES.find(f => f.id === id) || { name: '', short: '' }; }
+function getCourse(id) { return COURSES.find(c => c.id === id); }
+function getReviews(id) { return SAMPLE_REVIEWS[id] || GENERIC_REVIEWS; }
+function avatarLetter() { return 'A'; }
+
+function escape(str) {
+  return String(str).replace(/[&<>"']/g, s => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+  }[s]));
+}
+
+/* ============================================================
+   ROUTING
+   ============================================================ */
+const routes = {
+  '/':            renderHome,
+  '/przedmioty':  renderCourseList,
+  '/wydzialy':    renderFaculties,
+  '/o-projekcie': renderAbout,
+  '/dodaj':       renderAddReview
+};
+
+function navigate() {
+  const hash = window.location.hash.slice(1) || '/';
+  const app = document.getElementById('app');
+
+  // dynamic course detail
+  if (hash.startsWith('/przedmiot/')) {
+    const id = hash.split('/')[2];
+    app.innerHTML = '';
+    renderCourseDetail(app, id);
+  } else {
+    const route = routes[hash];
+    app.innerHTML = '';
+    if (route) {
+      route(app);
+    } else {
+      app.innerHTML = `<div class="container" style="padding: 4rem 0;"><h1 class="display" style="font-size:3rem;">404</h1><p>Strona nie znaleziona.</p></div>`;
+    }
+  }
+
+  // update active nav
+  document.querySelectorAll('.nav a[data-link]').forEach(a => {
+    const target = a.getAttribute('href').slice(1);
+    a.classList.toggle('is-active', target !== '/' && hash.startsWith(target));
+  });
+
+  // close mobile menu
+  document.getElementById('mainNav').classList.remove('is-open');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+window.addEventListener('hashchange', navigate);
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('menuToggle').addEventListener('click', () => {
+    document.getElementById('mainNav').classList.toggle('is-open');
+  });
+  if (!window.location.hash) window.location.hash = '#/';
+  else navigate();
+});
+
+/* ============================================================
+   PAGE: HOME
+   ============================================================ */
+function renderHome(app) {
+  // sort top-rated for "Highly rated" section
+  const topRated = [...COURSES].sort((a, b) => b.dimensions.overall - a.dimensions.overall).slice(0, 6);
+
+  app.innerHTML = `
+    <section class="hero">
+      <div class="container">
+        <div class="hero__grid">
+          <div class="fade-up">
+            <div class="eyebrow">Studencki przewodnik · Uniwersytet Szczeciński</div>
+            <h1 class="display hero__title">Wybierz lepiej.<br><em>Studiuj mądrzej.</em></h1>
+            <p class="hero__sub">Anonimowe oceny przedmiotów i wykładowców USz. Pisane przez studentów dla studentów — żebyś wiedział, w co się pakujesz, zanim klikniesz „zapisz".</p>
+            <div class="search">
+              <span class="search__icon">${ICON_SEARCH}</span>
+              <input type="text" id="heroSearch" placeholder="Szukaj przedmiotu, wykładowcy lub wydziału...">
+              <button id="heroSearchBtn">Szukaj</button>
+            </div>
+          </div>
+          <div class="hero__meta fade-up delay-2">
+            <div>
+              <div class="hero__meta-num num">${COURSES.length}</div>
+              <div class="hero__meta-label">Przedmiotów</div>
+            </div>
+            <div>
+              <div class="hero__meta-num num">${TOTAL_REVIEWS.toLocaleString('pl-PL')}</div>
+              <div class="hero__meta-label">Recenzji</div>
+            </div>
+            <div>
+              <div class="hero__meta-num num">${FACULTIES.length}</div>
+              <div class="hero__meta-label">Wydziałów</div>
+            </div>
+            <div>
+              <div class="hero__meta-num num">~11k</div>
+              <div class="hero__meta-label">Studentów USz</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Najwyżej oceniane</div>
+            <h2>Co warto wybrać w tym semestrze</h2>
+          </div>
+          <a href="#/przedmioty" data-link class="section-head__link">Wszystkie przedmioty →</a>
+        </div>
+        <div class="courses-grid">
+          ${topRated.map(c => courseCardHtml(c)).join('')}
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Wydziały</div>
+            <h2>Przeglądaj według wydziału</h2>
+          </div>
+        </div>
+        <div class="faculties-grid">
+          ${FACULTIES.map((f, i) => `
+            <div class="faculty-card" onclick="window.location.hash='#/przedmioty?wydzial=${f.id}'">
+              <div class="faculty-card__top">
+                <div class="faculty-card__index">0${i + 1}</div>
+                <div class="faculty-card__count">${FACULTY_COUNTS[f.id]} przedm.</div>
+              </div>
+              <div class="faculty-card__name">${f.name}</div>
+            </div>
+          `).join('')}
+          <div class="faculty-card" style="background: var(--paper-2); cursor: default;" onclick="event.preventDefault()">
+            <div class="faculty-card__top">
+              <div class="faculty-card__index">→</div>
+            </div>
+            <div class="faculty-card__name" style="font-size: 1rem; color: var(--muted);">7 wydziałów,<br>91 kierunków,<br>~11 000 studentów</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">System ocen</div>
+            <h2>Pięć wymiarów, pełen obraz</h2>
+          </div>
+        </div>
+        <div class="rating-system">
+          <div class="rs-item">
+            <div class="rs-item__icon">★</div>
+            <div class="rs-item__name">Ocena ogólna</div>
+            <div class="rs-item__desc">Ogólna satysfakcja z przedmiotu — od 1 do 5 gwiazdek.</div>
+          </div>
+          <div class="rs-item">
+            <div class="rs-item__icon">T</div>
+            <div class="rs-item__name">Trudność</div>
+            <div class="rs-item__desc">Od 1 (łatwy) do 5 (bardzo trudny). Pomaga ocenić obciążenie.</div>
+          </div>
+          <div class="rs-item">
+            <div class="rs-item__icon">N</div>
+            <div class="rs-item__name">Jakość nauczania</div>
+            <div class="rs-item__desc">Czy prowadzący naprawdę uczy, czy tylko czyta slajdy?</div>
+          </div>
+          <div class="rs-item">
+            <div class="rs-item__icon">S</div>
+            <div class="rs-item__name">Sprawiedliwość</div>
+            <div class="rs-item__desc">Czy oceny są zrozumiałe i fair w stosunku do wymagań.</div>
+          </div>
+          <div class="rs-item" style="border-right: none;">
+            <div class="rs-item__icon">P</div>
+            <div class="rs-item__name">Przydatność</div>
+            <div class="rs-item__desc">Czy wiedza przyda się w pracy lub na dalszych studiach.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
+
+  // search handler on home
+  const searchInput = document.getElementById('heroSearch');
+  const searchBtn = document.getElementById('heroSearchBtn');
+  const doSearch = () => {
+    const q = searchInput.value.trim();
+    if (q) window.location.hash = `#/przedmioty?q=${encodeURIComponent(q)}`;
+    else window.location.hash = '#/przedmioty';
+  };
+  searchBtn.addEventListener('click', doSearch);
+  searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+
+  attachLinks();
+}
+
+/* ============================================================
+   COMPONENTS
+   ============================================================ */
+function courseCardHtml(c) {
+  const f = getFaculty(c.faculty);
+  return `
+    <div class="course-card" onclick="window.location.hash='#/przedmiot/${c.id}'">
+      <div class="course-card__top">
+        <div>
+          <div class="course-card__faculty">${f.short} · ${c.semester}</div>
+          <h3 class="course-card__title" style="margin-top: 0.5rem;">${c.name}</h3>
+        </div>
+        <div class="course-card__rating-block">
+          <div class="course-card__rating num">${c.dimensions.overall.toFixed(1)}</div>
+          ${starsHtml(c.dimensions.overall)}
+          <div class="course-card__rating-meta num">${c.reviewsCount} recenzji</div>
+        </div>
+      </div>
+      <div class="course-card__lecturer"><strong>${c.lecturer}</strong></div>
+    </div>
+  `;
+}
+
+function attachLinks() {
+  document.querySelectorAll('a[data-link]').forEach(a => {
+    a.addEventListener('click', e => {
+      // Let hash links work normally
+    });
+  });
+}
+
+/* ============================================================
+   PAGE: COURSE LIST
+   ============================================================ */
+function renderCourseList(app) {
+  // parse query from hash
+  const queryString = window.location.hash.includes('?') ? window.location.hash.split('?')[1] : '';
+  const params = new URLSearchParams(queryString);
+  const initialFaculty = params.get('wydzial');
+  const initialQuery = params.get('q') || '';
+
+  app.innerHTML = `
+    <section class="page-header">
+      <div class="container">
+        <div class="eyebrow">Katalog</div>
+        <h1>Przedmioty</h1>
+        <p>Przeglądaj ${COURSES.length} przedmiotów z 7 wydziałów USz. Filtruj według wydziału i sortuj po ocenie.</p>
+      </div>
+    </section>
+
+    <div class="container">
+      <div class="list-layout">
+        <aside class="filters">
+          <div class="search" style="margin-bottom: 1.75rem;">
+            <span class="search__icon">${ICON_SEARCH}</span>
+            <input type="text" id="listSearch" placeholder="Szukaj..." value="${escape(initialQuery)}">
+          </div>
+          <div class="filters__group">
+            <div class="filters__heading">Wydział</div>
+            ${FACULTIES.map(f => `
+              <label>
+                <span class="label-text">
+                  <input type="checkbox" data-filter="faculty" value="${f.id}" ${initialFaculty === f.id ? 'checked' : ''}>
+                  ${f.short}
+                </span>
+                <span class="label-count num">${FACULTY_COUNTS[f.id]}</span>
+              </label>
+            `).join('')}
+          </div>
+          <div class="filters__group">
+            <div class="filters__heading">Minimalna ocena</div>
+            <label><span class="label-text"><input type="checkbox" data-filter="rating" value="4">4,0+ ★</span></label>
+            <label><span class="label-text"><input type="checkbox" data-filter="rating" value="4.5">4,5+ ★</span></label>
+          </div>
+          <a href="#" class="filters__reset" id="resetFilters">Wyczyść filtry</a>
+        </aside>
+
+        <div>
+          <div class="results-bar">
+            <div class="results-bar__count" id="resultsCount">Ładowanie...</div>
+            <select id="sortBy">
+              <option value="rating">Najlepiej oceniane</option>
+              <option value="reviews">Najwięcej recenzji</option>
+              <option value="name">Alfabetycznie</option>
+              <option value="difficulty">Najłatwiejsze</option>
+            </select>
+          </div>
+          <div class="list-courses" id="courseResults"></div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  let activeFaculties = initialFaculty ? [initialFaculty] : [];
+  let activeRating = null;
+  let searchQuery = initialQuery;
+  let sortBy = 'rating';
+
+  function applyFilters() {
+    let filtered = [...COURSES];
+
+    if (activeFaculties.length) {
+      filtered = filtered.filter(c => activeFaculties.includes(c.faculty));
+    }
+    if (activeRating !== null) {
+      filtered = filtered.filter(c => c.dimensions.overall >= activeRating);
+    }
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      filtered = filtered.filter(c =>
+        c.name.toLowerCase().includes(q) ||
+        c.lecturer.toLowerCase().includes(q) ||
+        getFaculty(c.faculty).name.toLowerCase().includes(q) ||
+        getFaculty(c.faculty).short.toLowerCase().includes(q)
+      );
+    }
+
+    if (sortBy === 'rating') filtered.sort((a, b) => b.dimensions.overall - a.dimensions.overall);
+    else if (sortBy === 'reviews') filtered.sort((a, b) => b.reviewsCount - a.reviewsCount);
+    else if (sortBy === 'name') filtered.sort((a, b) => a.name.localeCompare(b.name, 'pl'));
+    else if (sortBy === 'difficulty') filtered.sort((a, b) => a.dimensions.difficulty - b.dimensions.difficulty);
+
+    document.getElementById('resultsCount').textContent =
+      `${filtered.length} ${filtered.length === 1 ? 'przedmiot' : (filtered.length < 5 && filtered.length > 1 ? 'przedmioty' : 'przedmiotów')}`;
+
+    const grid = document.getElementById('courseResults');
+    if (filtered.length === 0) {
+      grid.innerHTML = `<div style="grid-column: 1/-1; padding: 3rem 1.5rem; text-align: center; color: var(--muted); border-bottom: 1px solid var(--rule);">Brak wyników. Spróbuj zmienić filtry.</div>`;
+    } else {
+      grid.innerHTML = filtered.map(c => courseCardHtml(c)).join('');
+    }
+  }
+
+  document.querySelectorAll('input[data-filter="faculty"]').forEach(cb => {
+    cb.addEventListener('change', () => {
+      activeFaculties = Array.from(document.querySelectorAll('input[data-filter="faculty"]:checked')).map(c => c.value);
+      applyFilters();
+    });
+  });
+  document.querySelectorAll('input[data-filter="rating"]').forEach(cb => {
+    cb.addEventListener('change', e => {
+      // Only one rating filter active
+      document.querySelectorAll('input[data-filter="rating"]').forEach(c => { if (c !== e.target) c.checked = false; });
+      activeRating = e.target.checked ? parseFloat(e.target.value) : null;
+      applyFilters();
+    });
+  });
+  document.getElementById('listSearch').addEventListener('input', e => {
+    searchQuery = e.target.value.trim();
+    applyFilters();
+  });
+  document.getElementById('sortBy').addEventListener('change', e => {
+    sortBy = e.target.value;
+    applyFilters();
+  });
+  document.getElementById('resetFilters').addEventListener('click', e => {
+    e.preventDefault();
+    activeFaculties = [];
+    activeRating = null;
+    searchQuery = '';
+    document.querySelectorAll('input[data-filter]').forEach(cb => cb.checked = false);
+    document.getElementById('listSearch').value = '';
+    applyFilters();
+  });
+
+  applyFilters();
+}
+
+/* ============================================================
+   PAGE: COURSE DETAIL
+   ============================================================ */
+function renderCourseDetail(app, courseId) {
+  const c = getCourse(courseId);
+  if (!c) {
+    app.innerHTML = `<div class="container" style="padding: 4rem 0;"><h1 class="display" style="font-size:3rem;">Nie znaleziono</h1><p><a href="#/przedmioty" data-link>← Wróć do listy</a></p></div>`;
+    return;
+  }
+  const f = getFaculty(c.faculty);
+  const reviews = getReviews(courseId);
+  const dims = c.dimensions;
+
+  app.innerHTML = `
+    <section class="detail-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="#/" data-link>Strona główna</a>
+          <span>/</span>
+          <a href="#/przedmioty" data-link>Przedmioty</a>
+          <span>/</span>
+          <span style="color: var(--ink);">${c.name}</span>
+        </nav>
+        <div class="detail-hero__faculty">${f.name} · ${c.semester}</div>
+        <h1>${c.name}</h1>
+        <div class="detail-hero__lecturer">Prowadzący: <strong>${c.lecturer}</strong></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="detail-grid">
+          <div>
+            <div class="overall-rating">
+              <div class="overall-rating__num num">${dims.overall.toFixed(1)}<span> / 5</span></div>
+              <div class="overall-rating__stars">${starsHtml(dims.overall, 'stars--lg')}</div>
+              <div class="overall-rating__count num">Na podstawie ${c.reviewsCount} recenzji</div>
+            </div>
+            <button class="write-review-btn" onclick="window.location.hash='#/dodaj?przedmiot=${c.id}'">
+              Napisz recenzję
+            </button>
+          </div>
+          <div>
+            <h3 class="serif" style="font-size: 1.4rem; font-weight: 500; margin: 0 0 1.5rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--ink);">Szczegółowa ocena</h3>
+            <div class="dim-list">
+              ${dimRow('Trudność', dims.difficulty)}
+              ${dimRow('Jakość nauczania', dims.teaching)}
+              ${dimRow('Sprawiedliwość', dims.fairness)}
+              ${dimRow('Przydatność', dims.useful)}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="reviews-section">
+      <div class="container" style="max-width: 880px; margin: 0 auto;">
+        <h2>Recenzje (${reviews.length})</h2>
+        ${reviews.map(r => reviewHtml(r)).join('')}
+      </div>
+    </section>
+  `;
+}
+
+function dimRow(label, value) {
+  const pct = (value / 5) * 100;
+  return `
+    <div class="dim">
+      <div class="dim__label">${label}</div>
+      <div class="dim__bar-track"><div class="dim__bar-fill" style="width: ${pct}%"></div></div>
+      <div class="dim__value num">${value.toFixed(1)}</div>
+    </div>
+  `;
+}
+
+function reviewHtml(r) {
+  return `
+    <article class="review">
+      <div class="review__head">
+        <div class="review__author">
+          <div class="review__avatar">${avatarLetter()}</div>
+          <div>
+            <div style="font-weight: 500;">${r.author}</div>
+            <div class="review__date num">${r.date}</div>
+          </div>
+        </div>
+        <div class="review__rating">
+          <span class="review__semester">${r.semester}</span>
+          ${starsHtml(r.overall)}
+          <span class="review__overall num">${r.overall.toFixed(1)}</span>
+        </div>
+      </div>
+      <p class="review__text">${r.text}</p>
+      <div class="review__final-grade">Ocena końcowa: <strong class="num">${r.finalGrade}</strong></div>
+      <div class="review__actions">
+        <button class="vote-btn" onclick="this.classList.toggle('is-active'); this.classList.add('up')">${ICON_THUMB_UP} Przydatne (${r.up})</button>
+        <button class="vote-btn" onclick="this.classList.toggle('is-active'); this.classList.add('down')">${ICON_THUMB_DOWN} Nieprzydatne (${r.down})</button>
+      </div>
+    </article>
+  `;
+}
+
+/* ============================================================
+   PAGE: FACULTIES (overview)
+   ============================================================ */
+function renderFaculties(app) {
+  app.innerHTML = `
+    <section class="page-header">
+      <div class="container">
+        <div class="eyebrow">Struktura USz</div>
+        <h1>Wydziały</h1>
+        <p>Wszystkie 7 wydziałów Uniwersytetu Szczecińskiego. Wybierz wydział, aby zobaczyć przypisane przedmioty i recenzje.</p>
+      </div>
+    </section>
+    <div class="container" style="padding: 3rem 0 5rem;">
+      <div class="faculties-grid">
+        ${FACULTIES.map((f, i) => `
+          <div class="faculty-card" onclick="window.location.hash='#/przedmioty?wydzial=${f.id}'" style="min-height: 220px;">
+            <div class="faculty-card__top">
+              <div class="faculty-card__index">0${i + 1}</div>
+              <div class="faculty-card__count">${FACULTY_COUNTS[f.id]} przedm.</div>
+            </div>
+            <div class="faculty-card__name">${f.name}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+/* ============================================================
+   PAGE: ADD REVIEW
+   ============================================================ */
+function renderAddReview(app) {
+  const queryString = window.location.hash.includes('?') ? window.location.hash.split('?')[1] : '';
+  const params = new URLSearchParams(queryString);
+  const preselected = params.get('przedmiot');
+
+  app.innerHTML = `
+    <section class="form-page">
+      <div class="container">
+        <div class="form-card" id="formCard">
+          <div class="eyebrow" style="margin-bottom: 0.5rem;">Nowa recenzja</div>
+          <h1 class="display" style="font-size: 2.25rem; margin: 0 0 1.5rem; line-height: 1.1;">Podziel się doświadczeniem</h1>
+
+          <div class="form-notice">
+            <strong>Twoja recenzja jest w 100% anonimowa.</strong> Nie zbieramy informacji, które pozwoliłyby Cię zidentyfikować.
+          </div>
+
+          <div class="form-group">
+            <label class="field-label" for="course-select">Przedmiot</label>
+            <select id="course-select">
+              <option value="">— Wybierz przedmiot —</option>
+              ${COURSES.map(c => `
+                <option value="${c.id}" ${preselected === c.id ? 'selected' : ''}>
+                  ${c.name} — ${c.lecturer}
+                </option>
+              `).join('')}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="field-label">Ocena ogólna</label>
+            ${starInputHtml('overall')}
+            <div class="field-help">Twoje ogólne wrażenie z przedmiotu.</div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            <div class="form-group">
+              <label class="field-label">Trudność</label>
+              ${starInputHtml('difficulty')}
+            </div>
+            <div class="form-group">
+              <label class="field-label">Jakość nauczania</label>
+              ${starInputHtml('teaching')}
+            </div>
+            <div class="form-group">
+              <label class="field-label">Sprawiedliwość</label>
+              ${starInputHtml('fairness')}
+            </div>
+            <div class="form-group">
+              <label class="field-label">Przydatność</label>
+              ${starInputHtml('useful')}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="field-label" for="grade-input">Twoja ocena końcowa (opcjonalnie)</label>
+            <input type="text" id="grade-input" placeholder="np. 4,5">
+          </div>
+
+          <div class="form-group">
+            <label class="field-label" for="review-text">Twoja recenzja</label>
+            <textarea id="review-text" placeholder="Napisz jak było. Co fajne, co słabe, co warto wiedzieć zanim się zapiszesz na ten przedmiot."></textarea>
+            <div class="field-help">Minimum 50 znaków.</div>
+          </div>
+
+          <button class="form-submit" onclick="submitReview()">Wyślij recenzję</button>
+        </div>
+      </div>
+    </section>
+  `;
+
+  // Star input interaction
+  document.querySelectorAll('.star-input').forEach(group => {
+    const buttons = group.querySelectorAll('button');
+    buttons.forEach((btn, idx) => {
+      btn.addEventListener('mouseenter', () => {
+        buttons.forEach((b, i) => b.classList.toggle('is-hover', i <= idx));
+      });
+      btn.addEventListener('mouseleave', () => {
+        buttons.forEach(b => b.classList.remove('is-hover'));
+      });
+      btn.addEventListener('click', () => {
+        const v = idx + 1;
+        group.dataset.value = v;
+        buttons.forEach((b, i) => b.classList.toggle('is-on', i < v));
+      });
+    });
+  });
+}
+
+function starInputHtml(name) {
+  let html = `<div class="star-input" data-name="${name}" data-value="0">`;
+  for (let i = 0; i < 5; i++) {
+    html += `<button type="button" aria-label="${i + 1} gwiazdek">${ICON_STAR}</button>`;
+  }
+  html += '</div>';
+  return html;
+}
+
+window.submitReview = function() {
+  const formCard = document.getElementById('formCard');
+  formCard.innerHTML = `
+    <div class="form-success">
+      <div class="form-success__icon">${ICON_CHECK}</div>
+      <h2 class="display">Dziękujemy!</h2>
+      <p>Twoja recenzja została zapisana i pomoże innym studentom USz<br>podejmować lepsze decyzje przy zapisach na przedmioty.</p>
+      <div class="form-success__actions">
+        <a href="#/przedmioty" class="form-submit" data-link style="text-decoration: none; display: inline-block;">Wróć do przedmiotów</a>
+        <a href="#/dodaj" class="form-submit" data-link style="background: var(--paper); color: var(--ink); border: 1px solid var(--ink); text-decoration: none; display: inline-block;">Napisz kolejną</a>
+      </div>
+    </div>
+  `;
+};
+
+/* ============================================================
+   PAGE: ABOUT
+   ============================================================ */
+function renderAbout(app) {
+  app.innerHTML = `
+    <section class="page-header">
+      <div class="container">
+        <div class="eyebrow">Projekt studencki</div>
+        <h1>O USz Guide</h1>
+        <p>Studencki przewodnik po przedmiotach Uniwersytetu Szczecińskiego — projekt grupowy w ramach przedmiotu Przedsiębiorczość, 2026.</p>
+      </div>
+    </section>
+
+    <section class="about-section">
+      <div class="container">
+        <div class="about-text">
+          <p><strong>Problem.</strong> Studenci USz przed zapisami na przedmioty nie mają dostępu do rzetelnych informacji o jakości zajęć. Grupy na Facebooku i poczta pantoflowa są chaotyczne, nietrwałe i niemożliwe do przeszukania. Wybór niewłaściwego przedmiotu oznacza stratę czasu, stres i obniżone wyniki — a problem dotyczy wszystkich 11 000 studentów uczelni.</p>
+          <p><strong>Rozwiązanie.</strong> USz Guide to platforma anonimowych ocen przedmiotów i wykładowców. Studenci dzielą się doświadczeniami w pięciu wymiarach: ocenie ogólnej, trudności, jakości nauczania, sprawiedliwości i przydatności. Recenzje są anonimowe, przeszukiwalne i trwałe.</p>
+          <p><strong>Model.</strong> Rynek dwustronny z efektem sieciowym — im więcej recenzji, tym większa wartość platformy. Faza pierwsza: bezpłatna platforma i budowanie bazy użytkowników. Faza druga: monetyzacja przez reklamy firm szkoleniowych, polecane podręczniki i opcję Premium.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section" style="border-top: 1px solid var(--rule); padding-top: 3rem;">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Zespół</div>
+            <h2>Kto za tym stoi</h2>
+          </div>
+        </div>
+        <div class="team-grid">
+          <div class="team-member">
+            <div class="team-member__role">Założyciel</div>
+            <div class="team-member__name">Diogo Wang Ye</div>
+            <div class="team-member__desc">Strategia produktu, badania użytkowników, rozwój front-endu.</div>
+          </div>
+          <div class="team-member">
+            <div class="team-member__role">Założyciel</div>
+            <div class="team-member__name">Antek Ratowt</div>
+            <div class="team-member__desc">Model biznesowy, analiza konkurencji, rozwój marki.</div>
+          </div>
+          <div class="team-member">
+            <div class="team-member__role">Założyciel</div>
+            <div class="team-member__name">Adam Puc</div>
+            <div class="team-member__desc">Architektura informacji, projektowanie UX, walidacja MVP.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
+}
+</script>
+
+</body>
+</html>
