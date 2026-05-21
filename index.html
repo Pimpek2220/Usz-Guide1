@@ -1224,9 +1224,12 @@ const FACULTIES = [
   { id: 'wt',   name: 'Wydział Teologiczny',                       short: 'WT'   }
 ];
 
-// helper for placeholder data
-const C = (id, name, lecturer, faculty, semester, dimensions, reviewsCount) => ({
-  id, name, lecturer, faculty, semester, dimensions, reviewsCount
+// helper for placeholder data — wszystkie kursy startują z zerowymi statami,
+// realne oceny przyjdą z Supabase gdy użytkownicy zaczną dodawać recenzje
+const C = (id, name, lecturer, faculty, semester, _dimensions, _reviewsCount) => ({
+  id, name, lecturer, faculty, semester,
+  dimensions: { overall: 0, difficulty: 0, teaching: 0, fairness: 0, useful: 0 },
+  reviewsCount: 0
 });
 
 const COURSES = [
@@ -1273,34 +1276,10 @@ const FACULTY_COUNTS = FACULTIES.reduce((acc, f) => {
 
 const TOTAL_REVIEWS = COURSES.reduce((sum, c) => sum + c.reviewsCount, 0);
 
-// Sample reviews for detail page
-const SAMPLE_REVIEWS = {
-  'mikro': [
-    { author: 'Anonim', date: '12.03.2026', semester: 'Zima 2025/26', overall: 4, finalGrade: '4,0', text: 'spoko zajęcia, Kowalska tłumaczy wykresy w miarę. ALE - na egzaminie pyta z definicji słowo w słowo. uczcie się z notatek z wykładu, nie z internetu, bo używa swoich sformułowań', up: 47, down: 3 },
-    { author: 'Anonim', date: '08.03.2026', semester: 'Zima 2025/26', overall: 5, finalGrade: '5,0', text: 'polecam, najlepszy wykład w pierwszym semestrze. dużo zadań na ćwiczeniach ale to się opłaca, kolokwium zdacie spoko jeśli chodziliście', up: 31, down: 2 },
-    { author: 'Anonim', date: '24.02.2026', semester: 'Zima 2025/26', overall: 3, finalGrade: '3,0', text: 'ja tam się męczyłam. niby tłumaczy ale tempo jest dla osób co już coś z ekonomii ogarniają. konsultacje pomagają, chodźcie jak coś nie kumacie', up: 19, down: 4 }
-  ],
-  'analiza': [
-    { author: 'Anonim', date: '15.03.2026', semester: 'Zima 2025/26', overall: 2, finalGrade: '3,0', text: 'masakra szczerze. tempo z kosmosu i jak nie miałeś dobrej matmy w liceum to powodzenia. zdałem dopiero w drugim podejściu', up: 89, down: 8 },
-    { author: 'Anonim', date: '10.03.2026', semester: 'Zima 2025/26', overall: 3, finalGrade: '3,5', text: 'trudne ale to chyba normalka na analizie. profesor zna się na rzeczy tylko nie umie tłumaczyć dla początkujących. trzeba doczytywać samemu', up: 52, down: 5 },
-    { author: 'Anonim', date: '01.03.2026', semester: 'Zima 2025/26', overall: 4, finalGrade: '4,5', text: 'jak komuś matma w liceum szła to git, da się ogarnąć. egzamin trudny ale fair, dało się przygotować z zadań z ćwiczeń', up: 24, down: 7 }
-  ],
-  'progr': [
-    { author: 'Anonim', date: '20.03.2026', semester: 'Zima 2025/26', overall: 5, finalGrade: '5,0', text: '10/10 absolutnie. Wróbel ogarnia, odpowiada na pytania na slacku nawet wieczorem. projekt zespołowy fajny - robiliśmy aplikację webową w 3 osoby', up: 89, down: 2 },
-    { author: 'Anonim', date: '14.03.2026', semester: 'Zima 2025/26', overall: 5, finalGrade: '4,5', text: 'najlepsze zajęcia w semestrze. dużo kodu, mało gadania. polecam wszystkim co chcą się faktycznie nauczyć programować a nie tylko zaliczyć', up: 56, down: 1 },
-    { author: 'Anonim', date: '03.03.2026', semester: 'Zima 2025/26', overall: 4, finalGrade: '4,0', text: 'spoko ale UWAGA z deadlinem na projekt - jak nie oddasz na czas to nie zaliczysz. ostatnie dni miałem stres jak cholera', up: 28, down: 4 }
-  ],
-  'rach': [
-    { author: 'Anonim', date: '18.03.2026', semester: 'Zima 2025/26', overall: 3, finalGrade: '3,5', text: 'no słabo. mówi szybko, slajdy chaotyczne, na pytania odpowiada półgębkiem. uczcie się z książki Sawickiej, slajdy zostawcie', up: 41, down: 7 },
-    { author: 'Anonim', date: '11.03.2026', semester: 'Zima 2025/26', overall: 4, finalGrade: '4,0', text: 'trudny ale przydatny. jak chcecie iść w finanse to musicie umieć. sama treść ok, prowadzenie - hmm średnio', up: 27, down: 5 }
-  ]
-};
+// Brak przykładowych recenzji — pokazujemy tylko prawdziwe z bazy danych
+const SAMPLE_REVIEWS = {};
 
-// Generic fallback reviews used for courses without specific samples
-const GENERIC_REVIEWS = [
-  { author: 'Anonim', date: '14.03.2026', semester: 'Zima 2025/26', overall: 4, finalGrade: '4,0', text: 'spoko, da się przeżyć. uczcie się systematycznie a nie noc przed egzaminem to dacie radę', up: 23, down: 3 },
-  { author: 'Anonim', date: '28.02.2026', semester: 'Zima 2025/26', overall: 3, finalGrade: '3,5', text: 'ujdzie. nic szczególnego ani na plus ani na minus. trzeba się nauczyć i tyle', up: 12, down: 4 }
-];
+const GENERIC_REVIEWS = [];
 
 /* ============================================================
    ICONS
@@ -1622,8 +1601,8 @@ async function renderHome(app) {
       <div class="container">
         <div class="section-head">
           <div>
-            <div class="eyebrow">Najwyżej oceniane</div>
-            <h2>Co warto wybrać w tym semestrze</h2>
+            <div class="eyebrow">${totalReviews > 0 ? 'Najwyżej oceniane' : 'Przeglądaj'}</div>
+            <h2>${totalReviews > 0 ? 'Co warto wybrać w tym semestrze' : 'Wybrane przedmioty'}</h2>
           </div>
           <a href="#/przedmioty" data-link class="section-head__link">Wszystkie przedmioty →</a>
         </div>
@@ -1719,6 +1698,7 @@ async function renderHome(app) {
    ============================================================ */
 function courseCardHtml(c) {
   const f = getFaculty(c.faculty);
+  const hasReviews = c.reviewsCount > 0;
   return `
     <div class="course-card" onclick="window.location.hash='#/przedmiot/${c.id}'">
       <div class="course-card__top">
@@ -1727,9 +1707,13 @@ function courseCardHtml(c) {
           <h3 class="course-card__title" style="margin-top: 0.5rem;">${c.name}</h3>
         </div>
         <div class="course-card__rating-block">
-          <div class="course-card__rating num">${c.dimensions.overall.toFixed(1)}</div>
-          ${starsHtml(c.dimensions.overall)}
-          <div class="course-card__rating-meta num">${c.reviewsCount} recenzji</div>
+          ${hasReviews ? `
+            <div class="course-card__rating num">${c.dimensions.overall.toFixed(1)}</div>
+            ${starsHtml(c.dimensions.overall)}
+            <div class="course-card__rating-meta num">${c.reviewsCount} recenzji</div>
+          ` : `
+            <div class="course-card__rating-meta" style="color: var(--muted); font-style: italic;">Brak ocen</div>
+          `}
         </div>
       </div>
       <div class="course-card__lecturer"><strong>${c.lecturer}</strong></div>
@@ -1920,17 +1904,22 @@ async function renderCourseDetail(app, courseId) {
       <div class="container">
         <div class="detail-grid" id="detail-stats">
           <div>
-            <div class="overall-rating">
-              <div class="overall-rating__num num" id="stat-overall">${dims.overall.toFixed(1)}<span> / 5</span></div>
-              <div class="overall-rating__stars" id="stat-stars">${starsHtml(dims.overall, 'stars--lg')}</div>
-              <div class="overall-rating__count num" id="stat-count">Na podstawie ${c.reviewsCount} recenzji</div>
+            <div class="overall-rating" id="overall-rating-block">
+              ${c.reviewsCount > 0 ? `
+                <div class="overall-rating__num num" id="stat-overall">${dims.overall.toFixed(1)}<span> / 5</span></div>
+                <div class="overall-rating__stars" id="stat-stars">${starsHtml(dims.overall, 'stars--lg')}</div>
+                <div class="overall-rating__count num" id="stat-count">Na podstawie ${c.reviewsCount} recenzji</div>
+              ` : `
+                <div class="serif" style="font-size: 2rem; color: var(--muted); font-weight: 500; line-height: 1.1;">Brak ocen</div>
+                <div style="color: var(--muted); font-size: 14px; margin-top: 0.75rem;">Ten przedmiot nie ma jeszcze recenzji.<br>Bądź pierwsza/y!</div>
+              `}
             </div>
             <button class="write-review-btn" onclick="window.location.hash='#/dodaj?przedmiot=${c.id}'">
               Napisz recenzję
             </button>
           </div>
           <div>
-            <h3 class="serif" style="font-size: 1.4rem; font-weight: 500; margin: 0 0 1.5rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--ink);">Szczegółowa ocena</h3>
+            <h3 class="serif" style="font-size: 1.4rem; font-weight: 500; margin: 0 0 1.5rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--ink);">${c.reviewsCount > 0 ? 'Szczegółowa ocena' : 'Co oceniamy'}</h3>
             <div class="dim-list" id="stat-dims">
               ${dimRow('Trudność', dims.difficulty)}
               ${dimRow('Jakość nauczania', dims.teaching)}
@@ -1968,9 +1957,13 @@ async function renderCourseDetail(app, courseId) {
   const liveCourse = applyCourseStats(c, stats);
   if (liveCourse !== c) {
     const ld = liveCourse.dimensions;
-    document.getElementById('stat-overall').innerHTML = `${ld.overall.toFixed(1)}<span> / 5</span>`;
-    document.getElementById('stat-stars').innerHTML = starsHtml(ld.overall, 'stars--lg');
-    document.getElementById('stat-count').textContent = `Na podstawie ${liveCourse.reviewsCount} recenzji`;
+    // Re-render całego bloku overall-rating bo struktura DOM różni się
+    // między stanem "brak ocen" a stanem z danymi
+    document.getElementById('overall-rating-block').innerHTML = `
+      <div class="overall-rating__num num" id="stat-overall">${ld.overall.toFixed(1)}<span> / 5</span></div>
+      <div class="overall-rating__stars" id="stat-stars">${starsHtml(ld.overall, 'stars--lg')}</div>
+      <div class="overall-rating__count num" id="stat-count">Na podstawie ${liveCourse.reviewsCount} recenzji</div>
+    `;
     document.getElementById('stat-dims').innerHTML = `
       ${dimRow('Trudność', ld.difficulty)}
       ${dimRow('Jakość nauczania', ld.teaching)}
@@ -1989,12 +1982,14 @@ async function renderCourseDetail(app, courseId) {
 }
 
 function dimRow(label, value) {
-  const pct = (value / 5) * 100;
+  const hasValue = value > 0;
+  const pct = hasValue ? (value / 5) * 100 : 0;
+  const display = hasValue ? value.toFixed(1) : '—';
   return `
     <div class="dim">
       <div class="dim__label">${label}</div>
       <div class="dim__bar-track"><div class="dim__bar-fill" style="width: ${pct}%"></div></div>
-      <div class="dim__value num">${value.toFixed(1)}</div>
+      <div class="dim__value num" style="${!hasValue ? 'color: var(--muted);' : ''}">${display}</div>
     </div>
   `;
 }
