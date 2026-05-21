@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
   :root {
     --ink: #0A1628;
@@ -882,6 +883,233 @@
 
   /* Visually hidden */
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+  /* ========= Loading skeleton ========= */
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  .skeleton {
+    background: linear-gradient(90deg, var(--rule) 0%, var(--paper-2) 50%, var(--rule) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite linear;
+    border-radius: 2px;
+  }
+  .skeleton-line { height: 14px; margin-bottom: 8px; }
+  .skeleton-line.short { width: 40%; }
+  .skeleton-line.medium { width: 70%; }
+
+  /* ========= Toast ========= */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--ink);
+    color: var(--paper);
+    padding: 14px 22px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 240ms ease, transform 240ms ease;
+    max-width: 90vw;
+    text-align: center;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .toast.error { background: var(--negative); }
+  .toast.success { background: var(--positive); }
+
+  /* ========= Backend status banner ========= */
+  .backend-banner {
+    background: #FFF7E6;
+    border-bottom: 1px solid #F0D58C;
+    color: #8B6914;
+    text-align: center;
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+  .backend-banner strong { font-weight: 600; }
+
+  /* ========= Disabled vote button ========= */
+  .vote-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .vote-btn.voted { color: var(--primary); }
+
+  /* ========= Admin page ========= */
+  .admin-page { padding: clamp(2rem, 5vw, 4rem) 0; }
+  .admin-login {
+    max-width: 420px;
+    margin: 4rem auto;
+    border: 1px solid var(--rule);
+    padding: 2.5rem;
+    background: var(--paper);
+  }
+  .admin-login h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.75rem;
+    font-weight: 500;
+    margin: 0 0 0.5rem;
+  }
+  .admin-login p { color: var(--muted); font-size: 14px; margin: 0 0 1.75rem; }
+
+  .admin-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--ink);
+    margin-bottom: 0;
+  }
+  .admin-tab {
+    padding: 0.9rem 1.5rem;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--muted);
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: color 200ms ease, border-color 200ms ease;
+    margin-bottom: -1px;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+  .admin-tab:hover { color: var(--ink); }
+  .admin-tab.is-active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+  }
+  .admin-tab__count {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 7px;
+    border-radius: 10px;
+    background: var(--rule);
+    color: var(--ink);
+    font-size: 11px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .admin-tab.is-active .admin-tab__count {
+    background: var(--primary);
+    color: var(--paper);
+  }
+
+  .admin-review {
+    padding: 1.75rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .admin-review__meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  .admin-review__course {
+    font-family: 'Fraunces', serif;
+    font-size: 1.15rem;
+    font-weight: 500;
+  }
+  .admin-review__course .lecturer {
+    color: var(--muted);
+    font-size: 13px;
+    font-family: 'Manrope', sans-serif;
+    margin-left: 0.5rem;
+  }
+  .admin-review__date {
+    font-size: 12px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .admin-review__ratings {
+    display: flex;
+    gap: 1.25rem;
+    margin: 0.5rem 0 1rem;
+    font-size: 13px;
+    color: var(--muted);
+    flex-wrap: wrap;
+  }
+  .admin-review__ratings strong {
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+    margin-left: 4px;
+  }
+  .admin-review__text {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink);
+    background: var(--paper-2);
+    padding: 1rem 1.25rem;
+    border-left: 3px solid var(--rule);
+    margin: 0 0 1rem;
+    white-space: pre-wrap;
+  }
+  .admin-review__actions {
+    display: flex;
+    gap: 0.6rem;
+  }
+  .admin-btn {
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    border: 1px solid;
+    transition: all 180ms ease;
+  }
+  .admin-btn--approve {
+    background: var(--positive);
+    color: var(--paper);
+    border-color: var(--positive);
+  }
+  .admin-btn--approve:hover { background: #266649; border-color: #266649; }
+  .admin-btn--reject {
+    background: var(--paper);
+    color: var(--negative);
+    border-color: var(--negative);
+  }
+  .admin-btn--reject:hover { background: var(--negative); color: var(--paper); }
+  .admin-btn--restore {
+    background: var(--paper);
+    color: var(--primary);
+    border-color: var(--primary);
+  }
+  .admin-btn--restore:hover { background: var(--primary); color: var(--paper); }
+  .admin-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .admin-review.is-rejected { opacity: 0.55; }
+  .admin-review.is-rejected .admin-review__text { background: #FBEFEF; border-left-color: var(--negative); }
+
+  .admin-status-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    margin-left: 0.5rem;
+  }
+  .admin-status-badge.approved { background: #E0F0E9; color: var(--positive); }
+  .admin-status-badge.rejected { background: #FBEFEF; color: var(--negative); }
+  .admin-status-badge.pending  { background: #FFF7E6; color: #8B6914; }
+
+  .admin-logout {
+    font-size: 13px;
+    color: var(--muted);
+    border-bottom: 1px solid var(--muted);
+    cursor: pointer;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    padding: 0 0 2px;
+  }
+  .admin-logout:hover { color: var(--ink); border-color: var(--ink); }
 </style>
 </head>
 <body>
@@ -936,6 +1164,52 @@
 </footer>
 
 <script>
+/* ============================================================
+   SUPABASE CONFIG
+   ============================================================
+   ABY WŁĄCZYĆ TRYB ONLINE (zapis recenzji do bazy):
+   1. Załóż konto na supabase.com (darmowe)
+   2. Utwórz nowy projekt, poczekaj 1-2 minuty
+   3. W Supabase Dashboard → SQL Editor → wklej i uruchom plik supabase-setup.sql
+   4. W Supabase Dashboard → Project Settings → API → skopiuj:
+      - "Project URL" do SUPABASE_URL poniżej
+      - "anon public" key do SUPABASE_ANON_KEY poniżej
+   Jeśli zostawisz puste, strona będzie działać z danymi przykładowymi.
+   ============================================================ */
+const SUPABASE_URL = 'https://qggdbtqkcddkcaykoknl.supabase.co/rest/v1/';      // np. 'https://xxxxx.supabase.co'
+const SUPABASE_ANON_KEY = 'sb_publishable_uom1SqAYiwCmpi4RI8JHOw_xAGj6Sjn'; // klucz "anon public" — można publikować
+
+let sb = null;
+const isOnline = () => Boolean(SUPABASE_URL && SUPABASE_ANON_KEY && sb);
+
+if (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase) {
+  try {
+    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    console.log('[USz Guide] Online mode — connected to Supabase');
+  } catch (e) {
+    console.error('[USz Guide] Failed to connect to Supabase:', e);
+  }
+} else {
+  console.log('[USz Guide] Demo mode — using sample data (Supabase not configured)');
+}
+
+/* ============================================================
+   TOAST HELPER
+   ============================================================ */
+function showToast(msg, type = '') {
+  const existing = document.querySelector('.toast');
+  if (existing) existing.remove();
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  document.body.appendChild(el);
+  requestAnimationFrame(() => el.classList.add('show'));
+  setTimeout(() => {
+    el.classList.remove('show');
+    setTimeout(() => el.remove(), 300);
+  }, 3500);
+}
+
 /* ============================================================
    DATA
    ============================================================ */
@@ -1052,8 +1326,182 @@ function starsHtml(rating, size='') {
 
 function getFaculty(id) { return FACULTIES.find(f => f.id === id) || { name: '', short: '' }; }
 function getCourse(id) { return COURSES.find(c => c.id === id); }
-function getReviews(id) { return SAMPLE_REVIEWS[id] || GENERIC_REVIEWS; }
 function avatarLetter() { return 'A'; }
+
+/* ============================================================
+   BACKEND DATA LAYER
+   ============================================================ */
+
+// Formatuje datę z Supabase (ISO) na polski format "DD.MM.YYYY"
+function formatDate(iso) {
+  const d = new Date(iso);
+  return `${String(d.getDate()).padStart(2, '0')}.${String(d.getMonth() + 1).padStart(2, '0')}.${d.getFullYear()}`;
+}
+
+// Przerabia rekord z bazy na format który rozumie reviewHtml()
+function dbRowToReview(row) {
+  return {
+    id: row.id,
+    author: 'Anonim',
+    date: formatDate(row.created_at),
+    semester: 'Bieżący',
+    overall: row.overall_rating,
+    finalGrade: row.final_grade || '—',
+    text: row.review_text,
+    up: row.upvotes || 0,
+    down: row.downvotes || 0,
+    isReal: true  // odznacza recenzje z bazy
+  };
+}
+
+// Pobiera recenzje danego przedmiotu — z bazy jeśli online, fallback na sample
+async function fetchReviews(courseId) {
+  if (!isOnline()) {
+    return getReviews(courseId);
+  }
+  try {
+    const { data, error } = await sb
+      .from('reviews')
+      .select('*')
+      .eq('course_id', courseId)
+      .eq('status', 'approved')
+      .order('created_at', { ascending: false })
+      .limit(50);
+    if (error) throw error;
+    const fromDb = (data || []).map(dbRowToReview);
+    // Jeśli baza pusta dla tego przedmiotu, pokaż sample żeby nie było pusto na demo
+    if (fromDb.length === 0) {
+      return getReviews(courseId).map(r => ({ ...r, isReal: false }));
+    }
+    return fromDb;
+  } catch (e) {
+    console.error('[USz Guide] Błąd pobierania recenzji:', e);
+    return getReviews(courseId);
+  }
+}
+
+// Cache statystyk żeby nie pobierać przy każdym renderze
+let courseStatsCache = null;
+let courseStatsPromise = null;
+
+async function fetchCourseStats() {
+  if (!isOnline()) return {};
+  if (courseStatsCache) return courseStatsCache;
+  if (courseStatsPromise) return courseStatsPromise;
+
+  courseStatsPromise = (async () => {
+    try {
+      const { data, error } = await sb
+        .from('course_stats')
+        .select('*');
+      if (error) throw error;
+      const map = {};
+      (data || []).forEach(s => { map[s.course_id] = s; });
+      courseStatsCache = map;
+      return map;
+    } catch (e) {
+      console.error('[USz Guide] Błąd pobierania statystyk:', e);
+      return {};
+    }
+  })();
+  return courseStatsPromise;
+}
+
+function invalidateStatsCache() {
+  courseStatsCache = null;
+  courseStatsPromise = null;
+}
+
+// Łączy hardcoded COURSES z dynamicznymi statystykami z bazy
+function applyCourseStats(course, stats) {
+  const live = stats[course.id];
+  if (!live || live.review_count === 0) return course;
+  return {
+    ...course,
+    reviewsCount: live.review_count,
+    dimensions: {
+      overall:    Number(live.avg_overall),
+      difficulty: Number(live.avg_difficulty),
+      teaching:   Number(live.avg_teaching),
+      fairness:   Number(live.avg_fairness),
+      useful:     Number(live.avg_useful)
+    }
+  };
+}
+
+// ============== Submit & Vote ==============
+
+const RATE_LIMIT_KEY = 'usz_last_submit';
+const RATE_LIMIT_MS = 30 * 1000;  // 30 sekund między wysłaniem
+
+async function submitReviewToBackend(payload) {
+  if (!isOnline()) {
+    // demo mode: udawaj że się udało
+    await new Promise(r => setTimeout(r, 600));
+    return { ok: true, demo: true };
+  }
+  // rate limit po stronie klienta
+  const last = parseInt(localStorage.getItem(RATE_LIMIT_KEY) || '0', 10);
+  if (Date.now() - last < RATE_LIMIT_MS) {
+    return { ok: false, error: 'Zbyt szybko! Odczekaj chwilę przed kolejną recenzją.' };
+  }
+  try {
+    const { error } = await sb.from('reviews').insert([payload]);
+    if (error) throw error;
+    localStorage.setItem(RATE_LIMIT_KEY, String(Date.now()));
+    invalidateStatsCache();
+    return { ok: true };
+  } catch (e) {
+    console.error('[USz Guide] Błąd wysyłania:', e);
+    return { ok: false, error: e.message || 'Nieznany błąd' };
+  }
+}
+
+const VOTES_KEY = 'usz_votes';
+function getVotedSet() {
+  try { return new Set(JSON.parse(localStorage.getItem(VOTES_KEY) || '[]')); }
+  catch { return new Set(); }
+}
+function markVoted(id) {
+  const s = getVotedSet();
+  s.add(String(id));
+  localStorage.setItem(VOTES_KEY, JSON.stringify([...s]));
+}
+
+async function voteReview(reviewId, voteType, btnEl) {
+  const voted = getVotedSet();
+  if (voted.has(String(reviewId))) {
+    showToast('Już głosowałeś na tę recenzję', '');
+    return;
+  }
+  // Optymistyczna aktualizacja UI
+  const countSpan = btnEl.querySelector('.vote-count');
+  if (countSpan) countSpan.textContent = Number(countSpan.textContent) + 1;
+  btnEl.classList.add('voted');
+  btnEl.disabled = true;
+  markVoted(reviewId);
+
+  if (!isOnline()) return;  // demo mode
+
+  try {
+    const { error } = await sb.rpc('vote_review', {
+      review_id: reviewId,
+      vote_type: voteType
+    });
+    if (error) throw error;
+  } catch (e) {
+    console.error('[USz Guide] Błąd głosowania:', e);
+    // wycofaj UI gdy błąd (tylko w trybie online)
+    if (countSpan) countSpan.textContent = Number(countSpan.textContent) - 1;
+    btnEl.classList.remove('voted');
+    btnEl.disabled = false;
+    showToast('Nie udało się zagłosować', 'error');
+  }
+}
+window.voteReview = voteReview;
+
+// helpers do oryginalnych sample reviews (zachowane jako fallback)
+function getReviews(id) { return SAMPLE_REVIEWS[id] || GENERIC_REVIEWS; }
 
 function escape(str) {
   return String(str).replace(/[&<>"']/g, s => ({
@@ -1069,7 +1517,8 @@ const routes = {
   '/przedmioty':  renderCourseList,
   '/wydzialy':    renderFaculties,
   '/o-projekcie': renderAbout,
-  '/dodaj':       renderAddReview
+  '/dodaj':       renderAddReview,
+  '/admin':       renderAdmin
 };
 
 function navigate() {
@@ -1107,6 +1556,15 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('menuToggle').addEventListener('click', () => {
     document.getElementById('mainNav').classList.toggle('is-open');
   });
+
+  // Banner ostrzegający że jesteśmy w trybie demo (gdy Supabase nie skonfigurowany)
+  if (!isOnline()) {
+    const banner = document.createElement('div');
+    banner.className = 'backend-banner';
+    banner.innerHTML = '<strong>Tryb demo</strong> — recenzje nie są zapisywane. Skonfiguruj Supabase aby włączyć zapis.';
+    document.body.insertBefore(banner, document.body.firstChild);
+  }
+
   if (!window.location.hash) window.location.hash = '#/';
   else navigate();
 });
@@ -1114,9 +1572,15 @@ window.addEventListener('DOMContentLoaded', () => {
 /* ============================================================
    PAGE: HOME
    ============================================================ */
-function renderHome(app) {
+async function renderHome(app) {
+  // Pobierz live stats (jeśli online)
+  const stats = await fetchCourseStats();
+  const liveCourses = COURSES.map(c => applyCourseStats(c, stats));
   // sort top-rated for "Highly rated" section
-  const topRated = [...COURSES].sort((a, b) => b.dimensions.overall - a.dimensions.overall).slice(0, 6);
+  const topRated = [...liveCourses].sort((a, b) => b.dimensions.overall - a.dimensions.overall).slice(0, 6);
+  const totalReviews = isOnline() && Object.keys(stats).length
+    ? Object.values(stats).reduce((sum, s) => sum + Number(s.review_count), 0)
+    : TOTAL_REVIEWS;
 
   app.innerHTML = `
     <section class="hero">
@@ -1138,7 +1602,7 @@ function renderHome(app) {
               <div class="hero__meta-label">Przedmiotów</div>
             </div>
             <div>
-              <div class="hero__meta-num num">${TOTAL_REVIEWS.toLocaleString('pl-PL')}</div>
+              <div class="hero__meta-num num">${totalReviews.toLocaleString('pl-PL')}</div>
               <div class="hero__meta-label">Recenzji</div>
             </div>
             <div>
@@ -1284,12 +1748,16 @@ function attachLinks() {
 /* ============================================================
    PAGE: COURSE LIST
    ============================================================ */
-function renderCourseList(app) {
+async function renderCourseList(app) {
   // parse query from hash
   const queryString = window.location.hash.includes('?') ? window.location.hash.split('?')[1] : '';
   const params = new URLSearchParams(queryString);
   const initialFaculty = params.get('wydzial');
   const initialQuery = params.get('q') || '';
+
+  // Pobierz live stats raz, na początku
+  const stats = await fetchCourseStats();
+  const allCourses = COURSES.map(c => applyCourseStats(c, stats));
 
   app.innerHTML = `
     <section class="page-header">
@@ -1349,7 +1817,7 @@ function renderCourseList(app) {
   let sortBy = 'rating';
 
   function applyFilters() {
-    let filtered = [...COURSES];
+    let filtered = [...allCourses];
 
     if (activeFaculties.length) {
       filtered = filtered.filter(c => activeFaculties.includes(c.faculty));
@@ -1421,14 +1889,15 @@ function renderCourseList(app) {
 /* ============================================================
    PAGE: COURSE DETAIL
    ============================================================ */
-function renderCourseDetail(app, courseId) {
-  const c = getCourse(courseId);
+async function renderCourseDetail(app, courseId) {
+  let c = getCourse(courseId);
   if (!c) {
     app.innerHTML = `<div class="container" style="padding: 4rem 0;"><h1 class="display" style="font-size:3rem;">Nie znaleziono</h1><p><a href="#/przedmioty" data-link>← Wróć do listy</a></p></div>`;
     return;
   }
   const f = getFaculty(c.faculty);
-  const reviews = getReviews(courseId);
+
+  // Najpierw renderuj z hardcoded statami (szybko) — potem podmień gdy przyjdą dane
   const dims = c.dimensions;
 
   app.innerHTML = `
@@ -1449,12 +1918,12 @@ function renderCourseDetail(app, courseId) {
 
     <section>
       <div class="container">
-        <div class="detail-grid">
+        <div class="detail-grid" id="detail-stats">
           <div>
             <div class="overall-rating">
-              <div class="overall-rating__num num">${dims.overall.toFixed(1)}<span> / 5</span></div>
-              <div class="overall-rating__stars">${starsHtml(dims.overall, 'stars--lg')}</div>
-              <div class="overall-rating__count num">Na podstawie ${c.reviewsCount} recenzji</div>
+              <div class="overall-rating__num num" id="stat-overall">${dims.overall.toFixed(1)}<span> / 5</span></div>
+              <div class="overall-rating__stars" id="stat-stars">${starsHtml(dims.overall, 'stars--lg')}</div>
+              <div class="overall-rating__count num" id="stat-count">Na podstawie ${c.reviewsCount} recenzji</div>
             </div>
             <button class="write-review-btn" onclick="window.location.hash='#/dodaj?przedmiot=${c.id}'">
               Napisz recenzję
@@ -1462,7 +1931,7 @@ function renderCourseDetail(app, courseId) {
           </div>
           <div>
             <h3 class="serif" style="font-size: 1.4rem; font-weight: 500; margin: 0 0 1.5rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--ink);">Szczegółowa ocena</h3>
-            <div class="dim-list">
+            <div class="dim-list" id="stat-dims">
               ${dimRow('Trudność', dims.difficulty)}
               ${dimRow('Jakość nauczania', dims.teaching)}
               ${dimRow('Sprawiedliwość', dims.fairness)}
@@ -1475,11 +1944,48 @@ function renderCourseDetail(app, courseId) {
 
     <section class="reviews-section">
       <div class="container" style="max-width: 880px; margin: 0 auto;">
-        <h2>Recenzje (${reviews.length})</h2>
-        ${reviews.map(r => reviewHtml(r)).join('')}
+        <h2 id="reviews-heading">Recenzje <span style="color: var(--muted); font-weight: 400; font-size: 0.85em;">(ładowanie...)</span></h2>
+        <div id="reviews-list">
+          ${[1,2,3].map(() => `
+            <div class="review">
+              <div class="skeleton skeleton-line short" style="height: 20px; margin-bottom: 14px;"></div>
+              <div class="skeleton skeleton-line"></div>
+              <div class="skeleton skeleton-line medium"></div>
+            </div>
+          `).join('')}
+        </div>
       </div>
     </section>
   `;
+
+  // Pobierz live stats i recenzje równolegle
+  const [stats, reviews] = await Promise.all([
+    fetchCourseStats(),
+    fetchReviews(courseId)
+  ]);
+
+  // Podmień statystyki na żywe dane (jeśli są)
+  const liveCourse = applyCourseStats(c, stats);
+  if (liveCourse !== c) {
+    const ld = liveCourse.dimensions;
+    document.getElementById('stat-overall').innerHTML = `${ld.overall.toFixed(1)}<span> / 5</span>`;
+    document.getElementById('stat-stars').innerHTML = starsHtml(ld.overall, 'stars--lg');
+    document.getElementById('stat-count').textContent = `Na podstawie ${liveCourse.reviewsCount} recenzji`;
+    document.getElementById('stat-dims').innerHTML = `
+      ${dimRow('Trudność', ld.difficulty)}
+      ${dimRow('Jakość nauczania', ld.teaching)}
+      ${dimRow('Sprawiedliwość', ld.fairness)}
+      ${dimRow('Przydatność', ld.useful)}
+    `;
+  }
+
+  // Podmień listę recenzji
+  document.getElementById('reviews-heading').innerHTML =
+    `Recenzje (${reviews.length})${!isOnline() ? ' <span style="color: var(--muted); font-weight: 400; font-size: 0.7em;">— tryb demo</span>' : ''}`;
+  document.getElementById('reviews-list').innerHTML =
+    reviews.length === 0
+      ? `<div style="padding: 3rem 1rem; text-align: center; color: var(--muted);">Jeszcze nikt nie ocenił tego przedmiotu.<br>Bądź pierwsza/y!</div>`
+      : reviews.map(r => reviewHtml(r)).join('');
 }
 
 function dimRow(label, value) {
@@ -1494,6 +2000,9 @@ function dimRow(label, value) {
 }
 
 function reviewHtml(r) {
+  const voted = getVotedSet().has(String(r.id));
+  const reviewId = r.id || `demo-${Math.random()}`;
+  const canVote = r.isReal && !voted;
   return `
     <article class="review">
       <div class="review__head">
@@ -1510,11 +2019,17 @@ function reviewHtml(r) {
           <span class="review__overall num">${r.overall.toFixed(1)}</span>
         </div>
       </div>
-      <p class="review__text">${r.text}</p>
+      <p class="review__text">${escape(r.text)}</p>
       <div class="review__final-grade">Ocena końcowa: <strong class="num">${r.finalGrade}</strong></div>
       <div class="review__actions">
-        <button class="vote-btn" onclick="this.classList.toggle('is-active'); this.classList.add('up')">${ICON_THUMB_UP} Przydatne (${r.up})</button>
-        <button class="vote-btn" onclick="this.classList.toggle('is-active'); this.classList.add('down')">${ICON_THUMB_DOWN} Nieprzydatne (${r.down})</button>
+        <button class="vote-btn ${voted ? 'voted' : ''}" ${!canVote && r.isReal ? 'disabled' : ''}
+                onclick="${r.isReal ? `voteReview(${reviewId}, 'up', this)` : `this.classList.toggle('voted')`}">
+          ${ICON_THUMB_UP} Przydatne (<span class="vote-count">${r.up}</span>)
+        </button>
+        <button class="vote-btn ${voted ? 'voted' : ''}" ${!canVote && r.isReal ? 'disabled' : ''}
+                onclick="${r.isReal ? `voteReview(${reviewId}, 'down', this)` : `this.classList.toggle('voted')`}">
+          ${ICON_THUMB_DOWN} Nieprzydatne (<span class="vote-count">${r.down}</span>)
+        </button>
       </div>
     </article>
   `;
@@ -1649,13 +2164,68 @@ function starInputHtml(name) {
   return html;
 }
 
-window.submitReview = function() {
+window.submitReview = async function() {
+  const courseId = document.getElementById('course-select').value;
+  const reviewText = document.getElementById('review-text').value.trim();
+  const finalGrade = document.getElementById('grade-input').value.trim();
+  const getStarValue = (name) => {
+    const el = document.querySelector(`.star-input[data-name="${name}"]`);
+    return el ? parseInt(el.dataset.value || '0', 10) : 0;
+  };
+  const overall    = getStarValue('overall');
+  const difficulty = getStarValue('difficulty');
+  const teaching   = getStarValue('teaching');
+  const fairness   = getStarValue('fairness');
+  const useful     = getStarValue('useful');
+
+  // Walidacja
+  if (!courseId) {
+    showToast('Wybierz przedmiot', 'error');
+    return;
+  }
+  if (overall === 0) {
+    showToast('Wystaw ocenę ogólną', 'error');
+    return;
+  }
+  if (reviewText.length < 20) {
+    showToast('Napisz przynajmniej 20 znaków', 'error');
+    return;
+  }
+
+  const payload = {
+    course_id: courseId,
+    overall_rating: overall,
+    difficulty_rating: difficulty || overall,
+    teaching_rating:   teaching   || overall,
+    fairness_rating:   fairness   || overall,
+    useful_rating:     useful     || overall,
+    final_grade: finalGrade || null,
+    review_text: reviewText
+  };
+
+  // Disabled state na czas wysyłki
+  const btn = document.querySelector('.form-submit');
+  if (btn) { btn.disabled = true; btn.textContent = 'Wysyłanie...'; btn.style.opacity = '0.7'; }
+
+  const result = await submitReviewToBackend(payload);
+
+  if (!result.ok) {
+    showToast(result.error || 'Coś poszło nie tak', 'error');
+    if (btn) { btn.disabled = false; btn.textContent = 'Wyślij recenzję'; btn.style.opacity = '1'; }
+    return;
+  }
+
+  const demoNote = result.demo
+    ? '<p style="color: var(--muted); font-size: 13px; margin-top: 1rem;">(tryb demo — recenzja nie została zapisana, włącz Supabase aby zapisywać prawdziwie)</p>'
+    : '';
+
   const formCard = document.getElementById('formCard');
   formCard.innerHTML = `
     <div class="form-success">
       <div class="form-success__icon">${ICON_CHECK}</div>
       <h2 class="display">Dziękujemy!</h2>
-      <p>Twoja recenzja została zapisana i pomoże innym studentom USz<br>podejmować lepsze decyzje przy zapisach na przedmioty.</p>
+      <p>Twoja recenzja została wysłana i czeka na moderację.<br>Pojawi się publicznie po sprawdzeniu przez administratora — zwykle w ciągu 24h.</p>
+      ${demoNote}
       <div class="form-success__actions">
         <a href="#/przedmioty" class="form-submit" data-link style="text-decoration: none; display: inline-block;">Wróć do przedmiotów</a>
         <a href="#/dodaj" class="form-submit" data-link style="background: var(--paper); color: var(--ink); border: 1px solid var(--ink); text-decoration: none; display: inline-block;">Napisz kolejną</a>
@@ -1716,6 +2286,271 @@ function renderAbout(app) {
     </section>
   `;
 }
+
+/* ============================================================
+   PAGE: ADMIN PANEL
+   ============================================================
+   Ukryta strona pod #/admin. Wymaga zalogowania (Supabase Auth).
+   Pokazuje recenzje w 3 zakładkach: oczekujące / zatwierdzone / odrzucone.
+   Administrator może zmieniać status każdej recenzji.
+   ============================================================ */
+
+async function renderAdmin(app) {
+  if (!isOnline()) {
+    app.innerHTML = `
+      <div class="container" style="padding: 4rem 0; max-width: 600px;">
+        <h1 class="display" style="font-size: 2rem; margin: 0 0 1rem;">Panel administratora niedostępny</h1>
+        <p style="color: var(--muted);">Panel działa tylko w trybie online. Skonfiguruj Supabase w pliku index.html aby włączyć moderację.</p>
+        <p><a href="#/" data-link style="color: var(--primary); border-bottom: 1px solid var(--primary);">← Wróć</a></p>
+      </div>
+    `;
+    return;
+  }
+
+  // Sprawdź czy zalogowany
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) {
+    renderAdminLogin(app);
+    return;
+  }
+
+  renderAdminDashboard(app, session.user);
+}
+
+function renderAdminLogin(app) {
+  app.innerHTML = `
+    <div class="admin-page">
+      <div class="container">
+        <div class="admin-login">
+          <h1>Panel administratora</h1>
+          <p>Zaloguj się aby moderować recenzje.</p>
+
+          <div class="form-group">
+            <label class="field-label" for="admin-email">Email</label>
+            <input type="text" id="admin-email" autocomplete="email">
+          </div>
+
+          <div class="form-group">
+            <label class="field-label" for="admin-password">Hasło</label>
+            <input type="password" id="admin-password" autocomplete="current-password">
+          </div>
+
+          <button class="form-submit" id="admin-login-btn" style="width: 100%;">Zaloguj się</button>
+
+          <p style="font-size: 12px; color: var(--muted); margin-top: 1.5rem; text-align: center;">
+            Konto administratora tworzysz w Supabase Dashboard → Authentication → Users
+          </p>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const submit = async () => {
+    const email = document.getElementById('admin-email').value.trim();
+    const password = document.getElementById('admin-password').value;
+    if (!email || !password) {
+      showToast('Wpisz email i hasło', 'error');
+      return;
+    }
+    const btn = document.getElementById('admin-login-btn');
+    btn.disabled = true; btn.textContent = 'Logowanie...';
+    const { data, error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) {
+      showToast('Nieprawidłowy email lub hasło', 'error');
+      btn.disabled = false; btn.textContent = 'Zaloguj się';
+      return;
+    }
+    showToast('Zalogowano', 'success');
+    renderAdminDashboard(document.getElementById('app'), data.user);
+  };
+
+  document.getElementById('admin-login-btn').addEventListener('click', submit);
+  document.getElementById('admin-password').addEventListener('keydown', e => {
+    if (e.key === 'Enter') submit();
+  });
+}
+
+let adminState = { tab: 'pending', reviews: { pending: [], approved: [], rejected: [] } };
+
+async function renderAdminDashboard(app, user) {
+  app.innerHTML = `
+    <div class="admin-page">
+      <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 1rem; margin-bottom: 0.5rem;">
+          <div>
+            <div class="eyebrow">Moderacja</div>
+            <h1 class="display" style="font-size: 2.25rem; font-weight: 500; margin: 0.5rem 0 0; line-height: 1.1;">Panel administratora</h1>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 13px; color: var(--muted);">Zalogowany jako</div>
+            <div style="font-size: 14px; font-weight: 500;">${escape(user.email)}</div>
+            <button class="admin-logout" id="admin-logout" style="margin-top: 0.4rem;">Wyloguj</button>
+          </div>
+        </div>
+
+        <div class="admin-tabs" style="margin-top: 2.5rem;">
+          <button class="admin-tab" data-tab="pending">
+            Oczekujące <span class="admin-tab__count" id="count-pending">…</span>
+          </button>
+          <button class="admin-tab" data-tab="approved">
+            Zatwierdzone <span class="admin-tab__count" id="count-approved">…</span>
+          </button>
+          <button class="admin-tab" data-tab="rejected">
+            Odrzucone <span class="admin-tab__count" id="count-rejected">…</span>
+          </button>
+        </div>
+
+        <div id="admin-content" style="padding: 1.5rem 0 4rem;">
+          <div style="padding: 3rem 1rem; text-align: center; color: var(--muted);">Ładowanie...</div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('admin-logout').addEventListener('click', async () => {
+    await sb.auth.signOut();
+    showToast('Wylogowano', 'success');
+    setTimeout(() => window.location.hash = '#/', 400);
+  });
+
+  document.querySelectorAll('.admin-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      adminState.tab = btn.dataset.tab;
+      updateAdminTabs();
+      renderAdminList();
+    });
+  });
+
+  await loadAdminReviews();
+  updateAdminTabs();
+  renderAdminList();
+}
+
+async function loadAdminReviews() {
+  try {
+    const { data, error } = await sb
+      .from('reviews')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(500);
+    if (error) throw error;
+    adminState.reviews = { pending: [], approved: [], rejected: [] };
+    (data || []).forEach(r => {
+      const status = r.status || 'pending';
+      if (adminState.reviews[status]) adminState.reviews[status].push(r);
+    });
+    document.getElementById('count-pending').textContent  = adminState.reviews.pending.length;
+    document.getElementById('count-approved').textContent = adminState.reviews.approved.length;
+    document.getElementById('count-rejected').textContent = adminState.reviews.rejected.length;
+  } catch (e) {
+    console.error('[Admin] Błąd ładowania:', e);
+    showToast('Błąd ładowania recenzji', 'error');
+  }
+}
+
+function updateAdminTabs() {
+  document.querySelectorAll('.admin-tab').forEach(btn => {
+    btn.classList.toggle('is-active', btn.dataset.tab === adminState.tab);
+  });
+}
+
+function renderAdminList() {
+  const list = adminState.reviews[adminState.tab] || [];
+  const container = document.getElementById('admin-content');
+
+  if (list.length === 0) {
+    const msgMap = {
+      pending: 'Brak recenzji do moderacji. Świetnie!',
+      approved: 'Brak zatwierdzonych recenzji.',
+      rejected: 'Brak odrzuconych recenzji.'
+    };
+    container.innerHTML = `<div style="padding: 4rem 1rem; text-align: center; color: var(--muted);">${msgMap[adminState.tab]}</div>`;
+    return;
+  }
+
+  container.innerHTML = list.map(r => adminReviewHtml(r)).join('');
+}
+
+function adminReviewHtml(r) {
+  const course = getCourse(r.course_id);
+  const courseName = course ? course.name : `[${r.course_id}]`;
+  const lecturer = course ? course.lecturer : '';
+  const status = r.status || 'pending';
+  const isPending  = status === 'pending';
+  const isApproved = status === 'approved';
+  const isRejected = status === 'rejected';
+
+  let actions = '';
+  if (isPending) {
+    actions = `
+      <button class="admin-btn admin-btn--approve" onclick="moderateReview(${r.id}, 'approved', this)">✓ Zatwierdź</button>
+      <button class="admin-btn admin-btn--reject" onclick="moderateReview(${r.id}, 'rejected', this)">✗ Odrzuć</button>
+    `;
+  } else if (isApproved) {
+    actions = `
+      <button class="admin-btn admin-btn--reject" onclick="moderateReview(${r.id}, 'rejected', this)">Odrzuć</button>
+    `;
+  } else if (isRejected) {
+    actions = `
+      <button class="admin-btn admin-btn--restore" onclick="moderateReview(${r.id}, 'approved', this)">Przywróć</button>
+    `;
+  }
+
+  return `
+    <article class="admin-review ${isRejected ? 'is-rejected' : ''}" data-id="${r.id}">
+      <div class="admin-review__meta">
+        <div>
+          <span class="admin-review__course">${escape(courseName)}<span class="lecturer">${escape(lecturer)}</span></span>
+          <span class="admin-status-badge ${status}">${status === 'pending' ? 'oczekuje' : status === 'approved' ? 'zatwierdzona' : 'odrzucona'}</span>
+        </div>
+        <div class="admin-review__date">#${r.id} · ${formatDate(r.created_at)}</div>
+      </div>
+
+      <div class="admin-review__ratings">
+        <span>Ogólna<strong>${r.overall_rating}/5</strong></span>
+        <span>Trudność<strong>${r.difficulty_rating}/5</strong></span>
+        <span>Nauczanie<strong>${r.teaching_rating}/5</strong></span>
+        <span>Sprawiedliwość<strong>${r.fairness_rating}/5</strong></span>
+        <span>Przydatność<strong>${r.useful_rating}/5</strong></span>
+        ${r.final_grade ? `<span>Ocena końcowa<strong>${escape(r.final_grade)}</strong></span>` : ''}
+      </div>
+
+      <p class="admin-review__text">${escape(r.review_text)}</p>
+
+      <div class="admin-review__actions">${actions}</div>
+    </article>
+  `;
+}
+
+async function moderateReview(reviewId, newStatus, btnEl) {
+  // disabled wszystkie buttony tej recenzji
+  const article = btnEl.closest('.admin-review');
+  article.querySelectorAll('button').forEach(b => b.disabled = true);
+  btnEl.textContent = '...';
+
+  try {
+    const { error } = await sb
+      .from('reviews')
+      .update({ status: newStatus })
+      .eq('id', reviewId);
+    if (error) throw error;
+
+    // Przeładuj listę
+    invalidateStatsCache();  // bo approved count zmienia statystyki publiczne
+    await loadAdminReviews();
+    renderAdminList();
+    showToast(
+      newStatus === 'approved' ? 'Recenzja zatwierdzona' : 'Recenzja odrzucona',
+      'success'
+    );
+  } catch (e) {
+    console.error('[Admin] Błąd moderacji:', e);
+    showToast('Nie udało się zmienić statusu — czy jesteś zalogowany jako admin?', 'error');
+    article.querySelectorAll('button').forEach(b => b.disabled = false);
+  }
+}
+
+window.moderateReview = moderateReview;
 </script>
 
 </body>
