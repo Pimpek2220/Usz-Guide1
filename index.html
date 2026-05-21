@@ -1501,7 +1501,9 @@ const routes = {
 };
 
 function navigate() {
-  const hash = window.location.hash.slice(1) || '/';
+  const fullHash = window.location.hash.slice(1) || '/';
+  // odetnij query string (np. ?przedmiot=mikro) przed wyszukiwaniem trasy
+  const hash = fullHash.split('?')[0];
   const app = document.getElementById('app');
 
   // dynamic course detail
