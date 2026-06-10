@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>USz Guide — Studencki Przewodnik po Przedmiotach</title>
-<meta name="description" content="Anonimowa platforma ocen przedmiotów i wykładowców Uniwersytetu Szczecińskiego.">
+<meta name="description" content="Anonimowa platforma ocen przedmiotów Uniwersytetu Szczecińskiego — organizacja, trudność i przydatność zajęć.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -1137,7 +1137,7 @@
     <div class="site-footer__top">
       <div>
         <h3>USz Guide</h3>
-        <p>Studencki przewodnik po przedmiotach i wykładowcach Uniwersytetu Szczecińskiego. Lepsze decyzje. Lepsze studia.</p>
+        <p>Studencki przewodnik po przedmiotach Uniwersytetu Szczecińskiego. Lepsze decyzje. Lepsze studia.</p>
       </div>
       <div class="footer-col">
         <div class="footer-col__title">Platforma</div>
@@ -1151,8 +1151,8 @@
         <div class="footer-col__title">Projekt</div>
         <ul>
           <li><a href="#/o-projekcie" data-link>O nas</a></li>
-          <li><a href="#" onclick="event.preventDefault()">Regulamin</a></li>
-          <li><a href="#" onclick="event.preventDefault()">Polityka prywatności</a></li>
+          <li><a href="#/regulamin" data-link>Regulamin</a></li>
+          <li><a href="#/prywatnosc" data-link>Polityka prywatności</a></li>
         </ul>
       </div>
     </div>
@@ -1176,8 +1176,8 @@
       - "anon public" key do SUPABASE_ANON_KEY poniżej
    Jeśli zostawisz puste, strona będzie działać z danymi przykładowymi.
    ============================================================ */
-const SUPABASE_URL = 'https://qggdbtqkcddkcaykoknl.supabase.co';      // np. 'https://xxxxx.supabase.co'
-const SUPABASE_ANON_KEY = 'sb_publishable_uom1SqAYiwCmpi4RI8JHOw_xAGj6Sjn'; // klucz "anon public" — można publikować
+const SUPABASE_URL = '';      // np. 'https://xxxxx.supabase.co'
+const SUPABASE_ANON_KEY = ''; // klucz "anon public" — można publikować
 
 let sb = null;
 const isOnline = () => Boolean(SUPABASE_URL && SUPABASE_ANON_KEY && sb);
@@ -1226,46 +1226,48 @@ const FACULTIES = [
 
 // helper for placeholder data — wszystkie kursy startują z zerowymi statami,
 // realne oceny przyjdą z Supabase gdy użytkownicy zaczną dodawać recenzje
-const C = (id, name, lecturer, faculty, semester, _dimensions, _reviewsCount) => ({
-  id, name, lecturer, faculty, semester,
-  dimensions: { overall: 0, difficulty: 0, teaching: 0, fairness: 0, useful: 0 },
+// helper for course data — bez nazwisk wykładowców (ocena dotyczy przedmiotu, nie osoby)
+// wszystkie kursy startują z zerowymi statami, realne oceny przyjdą z Supabase
+const C = (id, name, faculty, semester) => ({
+  id, name, faculty, semester,
+  dimensions: { overall: 0, difficulty: 0, organization: 0, clarity: 0, useful: 0 },
   reviewsCount: 0
 });
 
 const COURSES = [
-  C('mikro',   'Mikroekonomia',           'dr hab. Anna Kowalska, prof. US',  'efiz', 'I sem.',   { difficulty: 3.8, teaching: 4.6, fairness: 4.4, useful: 4.7, overall: 4.6 }, 87),
-  C('makro',   'Makroekonomia',           'prof. dr hab. Tomasz Nowak',       'efiz', 'II sem.',  { difficulty: 4.1, teaching: 4.2, fairness: 3.9, useful: 4.4, overall: 4.2 }, 64),
-  C('rach',    'Rachunkowość finansowa',  'dr Magdalena Wiśniewska',          'efiz', 'III sem.', { difficulty: 4.5, teaching: 3.5, fairness: 3.2, useful: 4.6, overall: 3.7 }, 52),
-  C('marketing','Marketing',              'dr Krzysztof Lewandowski',         'efiz', 'IV sem.',  { difficulty: 2.8, teaching: 4.7, fairness: 4.5, useful: 4.3, overall: 4.5 }, 71),
-  C('proj',    'Zarządzanie projektami',  'mgr Paweł Zieliński',              'efiz', 'V sem.',   { difficulty: 3.0, teaching: 4.8, fairness: 4.6, useful: 4.9, overall: 4.8 }, 43),
-  C('stat',    'Statystyka',              'dr hab. Joanna Kamińska, prof. US','efiz', 'II sem.',  { difficulty: 4.6, teaching: 3.8, fairness: 3.5, useful: 4.2, overall: 3.6 }, 95),
+  C('mikro',   'Mikroekonomia',           'efiz', 'I sem.'),
+  C('makro',   'Makroekonomia',           'efiz', 'II sem.'),
+  C('rach',    'Rachunkowość finansowa',  'efiz', 'III sem.'),
+  C('marketing','Marketing',              'efiz', 'IV sem.'),
+  C('proj',    'Zarządzanie projektami',  'efiz', 'V sem.'),
+  C('stat',    'Statystyka',              'efiz', 'II sem.'),
 
-  C('filo',    'Filozofia',               'prof. dr hab. Andrzej Mazur',      'wh',   'I sem.',   { difficulty: 3.4, teaching: 4.4, fairness: 4.1, useful: 3.6, overall: 4.0 }, 38),
-  C('logika',  'Logika',                  'dr Beata Szymańska',               'wh',   'I sem.',   { difficulty: 4.2, teaching: 3.6, fairness: 3.8, useful: 3.4, overall: 3.5 }, 29),
-  C('lit',     'Teoria literatury',       'dr hab. Robert Dąbrowski, prof. US','wh',  'III sem.', { difficulty: 3.2, teaching: 4.5, fairness: 4.3, useful: 3.8, overall: 4.3 }, 24),
-  C('jezyk',   'Językoznawstwo',          'prof. dr hab. Maria Kowalczyk',    'wh',   'II sem.',  { difficulty: 3.5, teaching: 4.1, fairness: 4.0, useful: 3.9, overall: 4.0 }, 31),
+  C('filo',    'Filozofia',               'wh',   'I sem.'),
+  C('logika',  'Logika',                  'wh',   'I sem.'),
+  C('lit',     'Teoria literatury',       'wh',   'III sem.'),
+  C('jezyk',   'Językoznawstwo',          'wh',   'II sem.'),
 
-  C('psycho',  'Psychologia ogólna',      'dr Karolina Pawlak',               'wns',  'I sem.',   { difficulty: 3.0, teaching: 4.7, fairness: 4.5, useful: 4.2, overall: 4.5 }, 112),
-  C('socjo',   'Socjologia',              'dr hab. Marek Wojcik, prof. US',   'wns',  'I sem.',   { difficulty: 2.9, teaching: 4.3, fairness: 4.4, useful: 4.0, overall: 4.2 }, 78),
-  C('peda',    'Pedagogika',              'dr Aleksandra Król',               'wns',  'II sem.',  { difficulty: 2.7, teaching: 4.0, fairness: 4.2, useful: 3.7, overall: 3.9 }, 46),
-  C('polit',   'Nauki o polityce',        'prof. dr hab. Jan Lis',            'wns',  'III sem.', { difficulty: 3.4, teaching: 4.5, fairness: 4.2, useful: 4.1, overall: 4.3 }, 33),
+  C('psycho',  'Psychologia ogólna',      'wns',  'I sem.'),
+  C('socjo',   'Socjologia',              'wns',  'I sem.'),
+  C('peda',    'Pedagogika',              'wns',  'II sem.'),
+  C('polit',   'Nauki o polityce',        'wns',  'III sem.'),
 
-  C('alg',     'Algebra liniowa',         'dr hab. Piotr Adamczyk, prof. US', 'wnsip','I sem.',   { difficulty: 4.7, teaching: 4.0, fairness: 3.6, useful: 4.4, overall: 3.9 }, 67),
-  C('analiza', 'Analiza matematyczna',    'prof. dr hab. Wojciech Stępień',   'wnsip','I sem.',   { difficulty: 4.8, teaching: 3.4, fairness: 3.0, useful: 4.5, overall: 3.4 }, 89),
-  C('progr',   'Programowanie obiektowe', 'mgr inż. Dariusz Wróbel',          'wnsip','III sem.', { difficulty: 3.9, teaching: 4.6, fairness: 4.5, useful: 4.9, overall: 4.7 }, 54),
-  C('bd',      'Bazy danych',             'dr Łukasz Kaczmarek',              'wnsip','IV sem.',  { difficulty: 3.6, teaching: 4.4, fairness: 4.2, useful: 4.8, overall: 4.4 }, 42),
-  C('biol',    'Biologia molekularna',    'dr hab. Grażyna Sokołowska, prof. US','wnsip','II sem.',{ difficulty: 4.3, teaching: 4.2, fairness: 4.0, useful: 4.1, overall: 4.1 }, 28),
+  C('alg',     'Algebra liniowa',         'wnsip','I sem.'),
+  C('analiza', 'Analiza matematyczna',    'wnsip','I sem.'),
+  C('progr',   'Programowanie obiektowe', 'wnsip','III sem.'),
+  C('bd',      'Bazy danych',             'wnsip','IV sem.'),
+  C('biol',    'Biologia molekularna',    'wnsip','II sem.'),
 
-  C('cyw',     'Prawo cywilne',           'prof. dr hab. Henryk Jankowski',   'wpia', 'III sem.', { difficulty: 4.5, teaching: 4.3, fairness: 4.0, useful: 4.7, overall: 4.3 }, 76),
-  C('karne',   'Prawo karne',             'dr hab. Ewa Mazurek, prof. US',    'wpia', 'IV sem.',  { difficulty: 4.4, teaching: 4.5, fairness: 4.2, useful: 4.6, overall: 4.4 }, 58),
-  C('admin',   'Postępowanie administracyjne','dr Marek Krawczyk',            'wpia', 'V sem.',   { difficulty: 4.0, teaching: 3.7, fairness: 3.5, useful: 4.3, overall: 3.7 }, 41),
-  C('konst',   'Prawo konstytucyjne',     'prof. dr hab. Agnieszka Walczak',  'wpia', 'I sem.',   { difficulty: 3.8, teaching: 4.6, fairness: 4.4, useful: 4.5, overall: 4.5 }, 63),
+  C('cyw',     'Prawo cywilne',           'wpia', 'III sem.'),
+  C('karne',   'Prawo karne',             'wpia', 'IV sem.'),
+  C('admin',   'Postępowanie administracyjne','wpia', 'V sem.'),
+  C('konst',   'Prawo konstytucyjne',     'wpia', 'I sem.'),
 
-  C('teo',     'Teologia fundamentalna',  'ks. dr hab. Marek Olszewski, prof. US','wt','I sem.',  { difficulty: 3.3, teaching: 4.6, fairness: 4.5, useful: 3.8, overall: 4.4 }, 18),
-  C('biblia',  'Pismo Święte – wprowadzenie','ks. prof. dr hab. Tadeusz Górski','wt', 'I sem.',   { difficulty: 3.0, teaching: 4.7, fairness: 4.6, useful: 3.9, overall: 4.5 }, 22),
+  C('teo',     'Teologia fundamentalna',  'wt',   'I sem.'),
+  C('biblia',  'Pismo Święte – wprowadzenie','wt', 'I sem.'),
 
-  C('wf',      'Anatomia człowieka',      'dr Bartosz Krupa',                 'wkfiz','I sem.',   { difficulty: 4.0, teaching: 4.3, fairness: 4.1, useful: 4.6, overall: 4.2 }, 35),
-  C('fizjo',   'Fizjologia wysiłku',      'dr hab. Justyna Borkowska, prof. US','wkfiz','II sem.',{ difficulty: 3.7, teaching: 4.5, fairness: 4.3, useful: 4.7, overall: 4.5 }, 27)
+  C('wf',      'Anatomia człowieka',      'wkfiz','I sem.'),
+  C('fizjo',   'Fizjologia wysiłku',      'wkfiz','II sem.')
 ];
 
 // pre-compute review counts per faculty
@@ -1289,6 +1291,7 @@ const ICON_STAR = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3
 const ICON_THUMB_UP = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M7 10v11h-3a1 1 0 01-1-1V11a1 1 0 011-1h3z"/><path d="M7 10l5-7c1.5 0 2.5 1 2.5 2.5V9h5a2 2 0 012 2.4l-1.5 7A2 2 0 0117 20H7"/></svg>`;
 const ICON_THUMB_DOWN = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M17 14V3h3a1 1 0 011 1v9a1 1 0 01-1 1h-3z"/><path d="M17 14l-5 7c-1.5 0-2.5-1-2.5-2.5V15h-5a2 2 0 01-2-2.4l1.5-7A2 2 0 017 4h10"/></svg>`;
 const ICON_CHECK = `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+const ICON_FLAG = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>`;
 
 /* ============================================================
    HELPERS
@@ -1399,11 +1402,11 @@ function applyCourseStats(course, stats) {
     ...course,
     reviewsCount: live.review_count,
     dimensions: {
-      overall:    Number(live.avg_overall),
-      difficulty: Number(live.avg_difficulty),
-      teaching:   Number(live.avg_teaching),
-      fairness:   Number(live.avg_fairness),
-      useful:     Number(live.avg_useful)
+      overall:      Number(live.avg_overall),
+      difficulty:   Number(live.avg_difficulty),
+      organization: Number(live.avg_organization),
+      clarity:      Number(live.avg_clarity),
+      useful:       Number(live.avg_useful)
     }
   };
 }
@@ -1497,6 +1500,8 @@ const routes = {
   '/wydzialy':    renderFaculties,
   '/o-projekcie': renderAbout,
   '/dodaj':       renderAddReview,
+  '/regulamin':   renderRegulamin,
+  '/prywatnosc':  renderPrywatnosc,
   '/admin':       renderAdmin
 };
 
@@ -1570,10 +1575,10 @@ async function renderHome(app) {
           <div class="fade-up">
             <div class="eyebrow">Studencki przewodnik · Uniwersytet Szczeciński</div>
             <h1 class="display hero__title">Wybierz lepiej.<br><em>Studiuj mądrzej.</em></h1>
-            <p class="hero__sub">Anonimowe oceny przedmiotów i wykładowców USz. Pisane przez studentów dla studentów — żebyś wiedział, w co się pakujesz, zanim klikniesz „zapisz".</p>
+            <p class="hero__sub">Anonimowe oceny przedmiotów USz — organizacja, trudność i przydatność zajęć. Pisane przez studentów dla studentów, żebyś wiedział, w co się pakujesz, zanim klikniesz „zapisz".</p>
             <div class="search">
               <span class="search__icon">${ICON_SEARCH}</span>
-              <input type="text" id="heroSearch" placeholder="Szukaj przedmiotu, wykładowcy lub wydziału...">
+              <input type="text" id="heroSearch" placeholder="Szukaj przedmiotu lub wydziału...">
               <button id="heroSearchBtn">Szukaj</button>
             </div>
           </div>
@@ -1662,19 +1667,19 @@ async function renderHome(app) {
             <div class="rs-item__desc">Od 1 (łatwy) do 5 (bardzo trudny). Pomaga ocenić obciążenie.</div>
           </div>
           <div class="rs-item">
-            <div class="rs-item__icon">N</div>
-            <div class="rs-item__name">Jakość nauczania</div>
-            <div class="rs-item__desc">Czy prowadzący naprawdę uczy, czy tylko czyta slajdy?</div>
+            <div class="rs-item__icon">O</div>
+            <div class="rs-item__name">Organizacja zajęć</div>
+            <div class="rs-item__desc">Czy zajęcia są dobrze zorganizowane, a materiały dostępne na czas.</div>
           </div>
           <div class="rs-item">
             <div class="rs-item__icon">S</div>
-            <div class="rs-item__name">Sprawiedliwość</div>
-            <div class="rs-item__desc">Czy oceny są zrozumiałe i fair w stosunku do wymagań.</div>
+            <div class="rs-item__name">Spójność wymagań</div>
+            <div class="rs-item__desc">Czy zasady zaliczenia są jasne i zgodne z tym, co zapowiedziano.</div>
           </div>
           <div class="rs-item" style="border-right: none;">
             <div class="rs-item__icon">P</div>
-            <div class="rs-item__name">Przydatność</div>
-            <div class="rs-item__desc">Czy wiedza przyda się w pracy lub na dalszych studiach.</div>
+            <div class="rs-item__name">Przydatność treści</div>
+            <div class="rs-item__desc">Czy wiedza z przedmiotu przyda się w pracy lub na dalszych studiach.</div>
           </div>
         </div>
       </div>
@@ -1718,7 +1723,7 @@ function courseCardHtml(c) {
           `}
         </div>
       </div>
-      <div class="course-card__lecturer"><strong>${c.lecturer}</strong></div>
+      <div class="course-card__lecturer"><strong>${f.name}</strong></div>
     </div>
   `;
 }
@@ -1815,7 +1820,6 @@ async function renderCourseList(app) {
       const q = searchQuery.toLowerCase();
       filtered = filtered.filter(c =>
         c.name.toLowerCase().includes(q) ||
-        c.lecturer.toLowerCase().includes(q) ||
         getFaculty(c.faculty).name.toLowerCase().includes(q) ||
         getFaculty(c.faculty).short.toLowerCase().includes(q)
       );
@@ -1898,7 +1902,6 @@ async function renderCourseDetail(app, courseId) {
         </nav>
         <div class="detail-hero__faculty">${f.name} · ${c.semester}</div>
         <h1>${c.name}</h1>
-        <div class="detail-hero__lecturer">Prowadzący: <strong>${c.lecturer}</strong></div>
       </div>
     </section>
 
@@ -1924,9 +1927,9 @@ async function renderCourseDetail(app, courseId) {
             <h3 class="serif" style="font-size: 1.4rem; font-weight: 500; margin: 0 0 1.5rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--ink);">${c.reviewsCount > 0 ? 'Szczegółowa ocena' : 'Co oceniamy'}</h3>
             <div class="dim-list" id="stat-dims">
               ${dimRow('Trudność', dims.difficulty)}
-              ${dimRow('Jakość nauczania', dims.teaching)}
-              ${dimRow('Sprawiedliwość', dims.fairness)}
-              ${dimRow('Przydatność', dims.useful)}
+              ${dimRow('Organizacja zajęć', dims.organization)}
+              ${dimRow('Spójność wymagań', dims.clarity)}
+              ${dimRow('Przydatność treści', dims.useful)}
             </div>
           </div>
         </div>
@@ -1968,9 +1971,9 @@ async function renderCourseDetail(app, courseId) {
     `;
     document.getElementById('stat-dims').innerHTML = `
       ${dimRow('Trudność', ld.difficulty)}
-      ${dimRow('Jakość nauczania', ld.teaching)}
-      ${dimRow('Sprawiedliwość', ld.fairness)}
-      ${dimRow('Przydatność', ld.useful)}
+      ${dimRow('Organizacja zajęć', ld.organization)}
+      ${dimRow('Spójność wymagań', ld.clarity)}
+      ${dimRow('Przydatność treści', ld.useful)}
     `;
   }
 
@@ -2027,10 +2030,34 @@ function reviewHtml(r) {
                 onclick="${r.isReal ? `voteReview(${reviewId}, 'down', this)` : `this.classList.toggle('voted')`}">
           ${ICON_THUMB_DOWN} Nieprzydatne (<span class="vote-count">${r.down}</span>)
         </button>
+        <button class="vote-btn report-btn" onclick="reportReview('${reviewId}', this)" style="margin-left: auto;">
+          ${ICON_FLAG} Zgłoś
+        </button>
       </div>
     </article>
   `;
 }
+
+// Zgłaszanie recenzji — notice and takedown (wymóg ustawy o świadczeniu usług drogą elektroniczną)
+window.reportReview = async function(reviewId, btnEl) {
+  const reason = prompt('Dlaczego zgłaszasz tę recenzję? (np. zawiera nazwisko, jest obraźliwa, nieprawdziwa)');
+  if (reason === null) return;  // anulowano
+  if (reason.trim().length < 3) {
+    showToast('Podaj powód zgłoszenia', 'error');
+    return;
+  }
+  btnEl.disabled = true;
+  btnEl.innerHTML = '✓ Zgłoszono';
+
+  if (isOnline()) {
+    try {
+      await sb.from('reports').insert([{ review_id: isNaN(Number(reviewId)) ? null : Number(reviewId), reason: reason.trim() }]);
+    } catch (e) {
+      console.error('[USz Guide] Błąd zgłaszania:', e);
+    }
+  }
+  showToast('Dziękujemy. Zgłoszenie trafiło do moderacji.', 'success');
+};
 
 /* ============================================================
    PAGE: FACULTIES (overview)
@@ -2076,7 +2103,8 @@ function renderAddReview(app) {
           <h1 class="display" style="font-size: 2.25rem; margin: 0 0 1.5rem; line-height: 1.1;">Podziel się doświadczeniem</h1>
 
           <div class="form-notice">
-            <strong>Twoja recenzja jest w 100% anonimowa.</strong> Nie zbieramy informacji, które pozwoliłyby Cię zidentyfikować.
+            <strong>Twoja recenzja jest w 100% anonimowa.</strong> Nie zbieramy informacji, które pozwoliłyby Cię zidentyfikować.<br><br>
+            <strong>Oceniasz przedmiot, nie osobę.</strong> Nie podawaj imion ani nazwisk wykładowców. Recenzje z danymi osobowymi, wulgarne lub niemerytoryczne są odrzucane podczas moderacji.
           </div>
 
           <div class="form-group">
@@ -2085,7 +2113,7 @@ function renderAddReview(app) {
               <option value="">— Wybierz przedmiot —</option>
               ${COURSES.map(c => `
                 <option value="${c.id}" ${preselected === c.id ? 'selected' : ''}>
-                  ${c.name} — ${c.lecturer}
+                  ${c.name} — ${getFaculty(c.faculty).short}
                 </option>
               `).join('')}
             </select>
@@ -2103,15 +2131,15 @@ function renderAddReview(app) {
               ${starInputHtml('difficulty')}
             </div>
             <div class="form-group">
-              <label class="field-label">Jakość nauczania</label>
-              ${starInputHtml('teaching')}
+              <label class="field-label">Organizacja zajęć</label>
+              ${starInputHtml('organization')}
             </div>
             <div class="form-group">
-              <label class="field-label">Sprawiedliwość</label>
-              ${starInputHtml('fairness')}
+              <label class="field-label">Spójność wymagań</label>
+              ${starInputHtml('clarity')}
             </div>
             <div class="form-group">
-              <label class="field-label">Przydatność</label>
+              <label class="field-label">Przydatność treści</label>
               ${starInputHtml('useful')}
             </div>
           </div>
@@ -2169,11 +2197,11 @@ window.submitReview = async function() {
     const el = document.querySelector(`.star-input[data-name="${name}"]`);
     return el ? parseInt(el.dataset.value || '0', 10) : 0;
   };
-  const overall    = getStarValue('overall');
-  const difficulty = getStarValue('difficulty');
-  const teaching   = getStarValue('teaching');
-  const fairness   = getStarValue('fairness');
-  const useful     = getStarValue('useful');
+  const overall      = getStarValue('overall');
+  const difficulty   = getStarValue('difficulty');
+  const organization = getStarValue('organization');
+  const clarity      = getStarValue('clarity');
+  const useful       = getStarValue('useful');
 
   // Walidacja
   if (!courseId) {
@@ -2188,14 +2216,21 @@ window.submitReview = async function() {
     showToast('Napisz przynajmniej 20 znaków', 'error');
     return;
   }
+  // Ochrona prawna: wykryj próby podania nazwiska wykładowcy.
+  // Oceniamy przedmiot, nie osobę — recenzje z tytułami naukowymi blokujemy.
+  const titlePattern = /\b(dr\s?hab|prof|dr|mgr|inż|ks)\b\.?/i;
+  if (titlePattern.test(reviewText)) {
+    showToast('Recenzje dotyczą przedmiotu, nie konkretnych osób. Usuń imiona/nazwiska i tytuły wykładowców.', 'error');
+    return;
+  }
 
   const payload = {
     course_id: courseId,
     overall_rating: overall,
-    difficulty_rating: difficulty || overall,
-    teaching_rating:   teaching   || overall,
-    fairness_rating:   fairness   || overall,
-    useful_rating:     useful     || overall,
+    difficulty_rating:   difficulty   || overall,
+    organization_rating: organization || overall,
+    clarity_rating:      clarity      || overall,
+    useful_rating:       useful       || overall,
     final_grade: finalGrade || null,
     review_text: reviewText
   };
@@ -2247,9 +2282,25 @@ function renderAbout(app) {
     <section class="about-section">
       <div class="container">
         <div class="about-text">
-          <p><strong>Problem.</strong> Studenci USz przed zapisami na przedmioty nie mają dostępu do rzetelnych informacji o jakości zajęć. Grupy na Facebooku i poczta pantoflowa są chaotyczne, nietrwałe i niemożliwe do przeszukania. Wybór niewłaściwego przedmiotu oznacza stratę czasu, stres i obniżone wyniki — a problem dotyczy wszystkich 11 000 studentów uczelni.</p>
-          <p><strong>Rozwiązanie.</strong> USz Guide to platforma anonimowych ocen przedmiotów i wykładowców. Studenci dzielą się doświadczeniami w pięciu wymiarach: ocenie ogólnej, trudności, jakości nauczania, sprawiedliwości i przydatności. Recenzje są anonimowe, przeszukiwalne i trwałe.</p>
+          <p><strong>Problem.</strong> Studenci USz przed zapisami na przedmioty nie mają dostępu do rzetelnych informacji o organizacji i wymaganiach zajęć. Grupy na Facebooku i poczta pantoflowa są chaotyczne, nietrwałe i niemożliwe do przeszukania. Wybór niewłaściwego przedmiotu oznacza stratę czasu, stres i obniżone wyniki — a problem dotyczy wszystkich 11 000 studentów uczelni.</p>
+          <p><strong>Rozwiązanie.</strong> USz Guide to platforma anonimowych ocen <strong>przedmiotów</strong> — nie osób. Studenci dzielą się doświadczeniami w pięciu wymiarach: ocenie ogólnej, trudności, organizacji zajęć, spójności wymagań i przydatności treści. Recenzje są anonimowe, przeszukiwalne i trwałe. Oceniamy sposób prowadzenia i organizację przedmiotu, a nie konkretnych wykładowców.</p>
           <p><strong>Model.</strong> Rynek dwustronny z efektem sieciowym — im więcej recenzji, tym większa wartość platformy. Faza pierwsza: bezpłatna platforma i budowanie bazy użytkowników. Faza druga: monetyzacja przez reklamy firm szkoleniowych, polecane podręczniki i opcję Premium.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section" style="border-top: 1px solid var(--rule); padding-top: 3rem;">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Ważne</div>
+            <h2>Niezależność i zasady</h2>
+          </div>
+        </div>
+        <div class="about-text">
+          <p>USz Guide jest <strong>niezależnym projektem studenckim</strong> i nie jest powiązany, autoryzowany ani wspierany przez Uniwersytet Szczeciński. Nie jest to oficjalne narzędzie uczelni.</p>
+          <p>Oceny dotyczą wyłącznie <strong>organizacji, trudności i treści przedmiotów</strong> — nie indywidualnych wykładowców. Recenzje zawierające imiona, nazwiska lub dane osobowe są odrzucane podczas moderacji. Każda recenzja przechodzi weryfikację przed publikacją, a treści naruszające zasady można zgłaszać do usunięcia.</p>
+          <p>Pełne zasady znajdziesz w <a href="#/regulamin" data-link style="color: var(--primary); border-bottom: 1px solid var(--primary);">Regulaminie</a> oraz <a href="#/prywatnosc" data-link style="color: var(--primary); border-bottom: 1px solid var(--primary);">Polityce prywatności</a>.</p>
         </div>
       </div>
     </section>
@@ -2278,6 +2329,86 @@ function renderAbout(app) {
             <div class="team-member__name">Adam Puc</div>
             <div class="team-member__desc">Architektura informacji, projektowanie UX, walidacja MVP.</div>
           </div>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+/* ============================================================
+   PAGE: REGULAMIN (warunki korzystania)
+   ============================================================ */
+function renderRegulamin(app) {
+  app.innerHTML = `
+    <section class="page-header">
+      <div class="container">
+        <div class="eyebrow">Dokumenty</div>
+        <h1>Regulamin</h1>
+        <p>Zasady korzystania z platformy USz Guide.</p>
+      </div>
+    </section>
+    <section class="about-section">
+      <div class="container">
+        <div class="about-text">
+          <p><strong>§1. Postanowienia ogólne.</strong> USz Guide („Serwis") to niezależna, studencka platforma umożliwiająca anonimowe ocenianie przedmiotów Uniwersytetu Szczecińskiego. Serwis nie jest powiązany z uczelnią ani przez nią autoryzowany. Korzystanie z Serwisu oznacza akceptację niniejszego Regulaminu.</p>
+
+          <p><strong>§2. Zakres ocen.</strong> Oceny i recenzje dotyczą wyłącznie przedmiotów — ich organizacji, trudności, spójności wymagań i przydatności treści. Serwis nie służy do oceniania ani opisywania konkretnych osób (wykładowców, pracowników uczelni).</p>
+
+          <p><strong>§3. Zasady publikowania treści.</strong> Użytkownik zobowiązuje się nie publikować treści, które:</p>
+          <p style="padding-left: 1.5rem;">a) zawierają imiona, nazwiska lub inne dane pozwalające zidentyfikować konkretne osoby;<br>
+          b) są wulgarne, obraźliwe lub stanowią atak personalny;<br>
+          c) zawierają nieprawdziwe informacje mogące naruszyć czyjeś dobre imię;<br>
+          d) nie dotyczą merytorycznie przedmiotu;<br>
+          e) naruszają prawo lub prawa osób trzecich.</p>
+
+          <p><strong>§4. Moderacja.</strong> Każda recenzja przed publikacją przechodzi weryfikację administratora. Administrator może odrzucić lub usunąć treści naruszające Regulamin. Recenzje zawierające dane osobowe są odrzucane.</p>
+
+          <p><strong>§5. Zgłaszanie naruszeń.</strong> Każdy może zgłosić treść naruszającą Regulamin, korzystając z funkcji „Zgłoś" przy recenzji lub pisząc na adres podany w §7. Zgłoszenia rozpatrujemy niezwłocznie, zwykle w ciągu 48 godzin. Treści uznane za naruszające prawo usuwamy bezzwłocznie po otrzymaniu wiarygodnego zgłoszenia.</p>
+
+          <p><strong>§6. Anonimowość.</strong> Serwis nie wymaga rejestracji do dodawania recenzji i nie zbiera danych identyfikujących autorów recenzji. Anonimowość nie zwalnia z obowiązku przestrzegania Regulaminu.</p>
+
+          <p><strong>§7. Kontakt.</strong> W sprawach dotyczących Serwisu, w tym zgłoszeń naruszeń i żądań usunięcia treści, prosimy o kontakt: <strong>kontakt@uszguide.pl</strong></p>
+
+          <p style="color: var(--muted); font-size: 14px;">Ostatnia aktualizacja: 2026. Regulamin może ulec zmianie — aktualna wersja jest zawsze dostępna w Serwisie.</p>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+/* ============================================================
+   PAGE: POLITYKA PRYWATNOŚCI
+   ============================================================ */
+function renderPrywatnosc(app) {
+  app.innerHTML = `
+    <section class="page-header">
+      <div class="container">
+        <div class="eyebrow">Dokumenty</div>
+        <h1>Polityka prywatności</h1>
+        <p>Jak przetwarzamy dane w serwisie USz Guide.</p>
+      </div>
+    </section>
+    <section class="about-section">
+      <div class="container">
+        <div class="about-text">
+          <p><strong>1. Administrator danych.</strong> Administratorem danych jest zespół projektu studenckiego USz Guide. Kontakt: <strong>kontakt@uszguide.pl</strong></p>
+
+          <p><strong>2. Jakie dane zbieramy.</strong> Serwis został zaprojektowany zgodnie z zasadą minimalizacji danych (art. 5 RODO). Dodawanie recenzji <strong>nie wymaga rejestracji ani podawania danych osobowych</strong>. Zbieramy wyłącznie:</p>
+          <p style="padding-left: 1.5rem;">a) treść recenzji i oceny liczbowe przedmiotu;<br>
+          b) datę dodania recenzji;<br>
+          c) dane konta administratora (e-mail) — dotyczy wyłącznie zespołu Serwisu.</p>
+
+          <p><strong>3. Czego nie zbieramy.</strong> Nie zbieramy adresów IP w sposób umożliwiający identyfikację, nie wymagamy logowania użytkowników, nie stosujemy profilowania ani śledzenia reklamowego.</p>
+
+          <p><strong>4. Cel przetwarzania.</strong> Dane przetwarzamy wyłącznie w celu prowadzenia platformy oceny przedmiotów i prezentowania zagregowanych opinii studentom.</p>
+
+          <p><strong>5. Twoje prawa.</strong> Zgodnie z RODO masz prawo do dostępu do swoich danych, ich sprostowania oraz usunięcia. Jeśli jesteś wykładowcą i uważasz, że jakaś treść Cię dotyczy lub narusza Twoje prawa, możesz zażądać jej usunięcia, pisząc na adres podany w punkcie 1 — rozpatrzymy żądanie niezwłocznie.</p>
+
+          <p><strong>6. Przechowywanie danych.</strong> Recenzje przechowujemy na serwerach dostawcy infrastruktury (Supabase, w regionie UE). Dane przechowujemy tak długo, jak długo działa Serwis lub do momentu otrzymania żądania usunięcia.</p>
+
+          <p><strong>7. Podstawa prawna.</strong> Przetwarzanie odbywa się na podstawie prawnie uzasadnionego interesu (art. 6 ust. 1 lit. f RODO) — umożliwienia studentom wymiany opinii o przedmiotach.</p>
+
+          <p style="color: var(--muted); font-size: 14px;">Ostatnia aktualizacja: 2026.</p>
         </div>
       </div>
     </section>
@@ -2471,7 +2602,7 @@ function renderAdminList() {
 function adminReviewHtml(r) {
   const course = getCourse(r.course_id);
   const courseName = course ? course.name : `[${r.course_id}]`;
-  const lecturer = course ? course.lecturer : '';
+  const faculty = course ? getFaculty(course.faculty).short : '';
   const status = r.status || 'pending';
   const isPending  = status === 'pending';
   const isApproved = status === 'approved';
@@ -2497,7 +2628,7 @@ function adminReviewHtml(r) {
     <article class="admin-review ${isRejected ? 'is-rejected' : ''}" data-id="${r.id}">
       <div class="admin-review__meta">
         <div>
-          <span class="admin-review__course">${escape(courseName)}<span class="lecturer">${escape(lecturer)}</span></span>
+          <span class="admin-review__course">${escape(courseName)}<span class="lecturer">${escape(faculty)}</span></span>
           <span class="admin-status-badge ${status}">${status === 'pending' ? 'oczekuje' : status === 'approved' ? 'zatwierdzona' : 'odrzucona'}</span>
         </div>
         <div class="admin-review__date">#${r.id} · ${formatDate(r.created_at)}</div>
@@ -2506,8 +2637,8 @@ function adminReviewHtml(r) {
       <div class="admin-review__ratings">
         <span>Ogólna<strong>${r.overall_rating}/5</strong></span>
         <span>Trudność<strong>${r.difficulty_rating}/5</strong></span>
-        <span>Nauczanie<strong>${r.teaching_rating}/5</strong></span>
-        <span>Sprawiedliwość<strong>${r.fairness_rating}/5</strong></span>
+        <span>Organizacja<strong>${r.organization_rating}/5</strong></span>
+        <span>Spójność<strong>${r.clarity_rating}/5</strong></span>
         <span>Przydatność<strong>${r.useful_rating}/5</strong></span>
         ${r.final_grade ? `<span>Ocena końcowa<strong>${escape(r.final_grade)}</strong></span>` : ''}
       </div>
